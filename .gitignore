@@ -1,0 +1,36 @@
+# ===== Android Studio / IntelliJ =====
+.idea/
+*.iml
+
+# ===== Gradle =====
+.gradle/
+build/
+*/build/
+local.properties
+
+# ===== Native Code Build =====
+.externalNativeBuild/
+.cxx/
+
+# ===== System Files =====
+.DS_Store
+Thumbs.db
+
+# ===== Android Output =====
+*.apk
+*.aab
+*.ap_
+captures/
+
+# ===== Lint & Logs =====
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+*.log
+
+# ===== Keystore / Secrets =====
+*.jks
+*.keystore
+app/google-services.json
+app/src/**/google-services.json
