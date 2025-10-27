@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="428dp"
+    android:layout_height="926dp"
+    android:background="#121212">
+
+    <!-- Ảnh nền -->
+    <ImageView
+        android:id="@+id/bg_image"
+        android:layout_width="0dp"
+        android:layout_height="355dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Logo nằm trên ảnh nền -->
+    <ImageView
+        android:id="@+id/logo_image"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="332dp"
+        android:src="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="384dp"
+        android:text="Millions of Songs.\nFree on NCT."
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Nút Sign Up Free -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_signup"
+        android:layout_width="337dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="460dp"
+        android:text="Sign up free"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="45dp"
+        app:backgroundTint="#1ED760"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Nút Google -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_google"
+        android:layout_width="337dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="508dp"
+        android:text="Continue with Google"
+        android:textColor="#F5F5F5"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="45dp"
+        app:backgroundTint="@android:color/transparent"
+        app:strokeWidth="1dp"
+        app:strokeColor="#F5F5F5"
+        app:icon="@drawable/ic_google"
+        app:iconGravity="textStart"
+        app:iconPadding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Nút Facebook -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_facebook"
+        android:layout_width="337dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="560dp"
+        android:text="Continue with Facebook"
+        android:textColor="#F5F5F5"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="45dp"
+        app:backgroundTint="@android:color/transparent"
+        app:strokeWidth="1dp"
+        app:strokeColor="#F5F5F5"
+        app:icon="@drawable/ic_facebook"
+        app:iconGravity="textStart"
+        app:iconPadding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Nút Apple -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_apple"
+        android:layout_width="337dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="612dp"
+        android:text="Continue with Apple"
+        android:textColor="#F5F5F5"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="45dp"
+        app:backgroundTint="@android:color/transparent"
+        app:strokeWidth="1dp"
+        app:strokeColor="#F5F5F5"
+        app:icon="@drawable/ic_apple"
+        app:iconGravity="textStart"
+        app:iconPadding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Nút Log in -->
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="672dp"
+        android:text="Log in"
+        android:textColor="#F5F5F5"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
