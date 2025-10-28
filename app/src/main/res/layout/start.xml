@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="428dp"
-    android:layout_height="926dp"
-    android:background="#121212">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    tools:context=".StartActivity">
 
     <!-- Ảnh nền -->
     <ImageView
@@ -17,15 +18,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Logo nằm trên ảnh nền -->
+    <!-- Logo -->
     <ImageView
         android:id="@+id/logo_image"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginTop="332dp"
+        android:layout_marginTop="308dp"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,108 +35,94 @@
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="384dp"
+        android:layout_marginTop="360dp"
         android:text="Millions of Songs.\nFree on NCT."
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Nút Sign Up Free -->
+    <!-- Ô nhập Username -->
+
+    <!-- Ô nhập Password -->
+
+    <EditText
+        android:id="@+id/edit_username"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="444dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/rounded_input_bg"
+        android:hint="Username or email"
+        android:padding="12dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="#B3B3B3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_login"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="564dp"
+        android:layout_marginEnd="40dp"
+        android:text="Log in"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:backgroundTint="#1ED760"
+        app:cornerRadius="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_signup"
-        android:layout_width="337dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="460dp"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
         android:text="Sign up free"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:backgroundTint="#FFFFFF"
         app:cornerRadius="45dp"
-        app:backgroundTint="#1ED760"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
 
-    <!-- Nút Google -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_google"
-        android:layout_width="337dp"
-        android:layout_height="40dp"
+    <EditText
+        android:id="@+id/edit_password"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="508dp"
-        android:text="Continue with Google"
-        android:textColor="#F5F5F5"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:cornerRadius="45dp"
-        app:backgroundTint="@android:color/transparent"
-        app:strokeWidth="1dp"
-        app:strokeColor="#F5F5F5"
-        app:icon="@drawable/ic_google"
-        app:iconGravity="textStart"
-        app:iconPadding="10dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/rounded_input_bg"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="#B3B3B3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Nút Facebook -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_facebook"
-        android:layout_width="337dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="560dp"
-        android:text="Continue with Facebook"
-        android:textColor="#F5F5F5"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:cornerRadius="45dp"
-        app:backgroundTint="@android:color/transparent"
-        app:strokeWidth="1dp"
-        app:strokeColor="#F5F5F5"
-        app:icon="@drawable/ic_facebook"
-        app:iconGravity="textStart"
-        app:iconPadding="10dp"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Nút Apple -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_apple"
-        android:layout_width="337dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="612dp"
-        android:text="Continue with Apple"
-        android:textColor="#F5F5F5"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:cornerRadius="45dp"
-        app:backgroundTint="@android:color/transparent"
-        app:strokeWidth="1dp"
-        app:strokeColor="#F5F5F5"
-        app:icon="@drawable/ic_apple"
-        app:iconGravity="textStart"
-        app:iconPadding="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Nút Log in -->
-    <TextView
-        android:id="@+id/tv_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="672dp"
-        android:text="Log in"
-        android:textColor="#F5F5F5"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Nút Sign up Free -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

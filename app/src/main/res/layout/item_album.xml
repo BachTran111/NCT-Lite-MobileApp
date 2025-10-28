@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/image_album"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_album"
+        android:background="@drawable/rounded_corners" />
+
+    <TextView
+        android:id="@+id/text_album_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="÷ (Divide)"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/text_album_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ed Sheeran"
+        android:textColor="#B3B3B3"
+        android:textSize="12sp" />
+</LinearLayout>
