@@ -15,9 +15,9 @@
         android:layout_height="36dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_back"
+        android:contentDescription="Back"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="Back" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Tiêu đề -->
     <TextView
@@ -28,31 +28,21 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/btn_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="24dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- EMAIL -->
-
     <TextView
         android:id="@+id/label_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="32dp"
         android:text="What's your email?"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="32dp"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
-
-    <!-- PASSWORD -->
-
-    <!-- GENDER -->
-
-    <!-- NAME -->
-
-    <!-- Nút Create Account -->
 
     <EditText
         android:id="@+id/et_email"
@@ -65,38 +55,46 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="8dp"
         app:layout_constraintTop_toBottomOf="@id/label_email" />
+
+    <!-- PASSWORD -->
+    <TextView
+        android:id="@+id/label_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Create a password"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_email" />
 
     <EditText
         android:id="@+id/et_password"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:background="#777777"
         android:inputType="textPassword"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="8dp"
         app:layout_constraintTop_toBottomOf="@id/label_password" />
 
+    <!-- NAME -->
     <TextView
         android:id="@+id/label_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
         android:text="What's your name?"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="24dp"
-        tools:layout_editor_absoluteY="315dp" />
+        app:layout_constraintTop_toBottomOf="@id/et_password" />
 
     <EditText
         android:id="@+id/et_name"
@@ -109,29 +107,15 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="8dp"
         app:layout_constraintTop_toBottomOf="@id/label_name" />
 
-    <TextView
-        android:id="@+id/label_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:text="Create a password"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="24dp"
-        app:layout_constraintTop_toBottomOf="@id/et_email" />
-
+    <!-- Nút Create Account -->
     <Button
         android:id="@+id/btn_create_account"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="32dp"
         android:backgroundTint="#1ED760"
         android:text="Create Account"
         android:textColor="#000000"
@@ -139,9 +123,7 @@
         android:textStyle="bold"
         app:cornerRadius="40dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="32dp"
         app:layout_constraintTop_toBottomOf="@id/et_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
