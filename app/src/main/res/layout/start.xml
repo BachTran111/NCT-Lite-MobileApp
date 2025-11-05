@@ -11,62 +11,58 @@
     <!-- Ảnh nền -->
     <ImageView
         android:id="@+id/bg_image"
-        android:layout_width="414dp"
-        android:layout_height="308dp"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
         android:scaleType="centerCrop"
         android:src="@drawable/placeholder"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Logo -->
-
-    <!-- Tiêu đề -->
-
     <ImageView
         android:id="@+id/logo_image"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:src="@drawable/logo"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bg_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bg_image" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
 
-    <!-- Ô nhập Username -->
-
+    <!-- Tiêu đề -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="Millions of Songs.\nFree on NCT."
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        android:textSize="28sp"
+        android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo_image" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
-    <!-- Ô nhập Password -->
+    <!-- Ô nhập Username -->
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="0dp"
         android:layout_height="48dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/rounded_input_bg"
         android:hint="Username or email"
         android:padding="12dp"
         android:textColor="@android:color/white"
         android:textColorHint="#B3B3B3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Ô nhập Password -->
     <EditText
         android:id="@+id/edit_password"
         android:layout_width="0dp"
@@ -85,40 +81,37 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Nút Log in -->
-
-    <!-- Nút Sign up -->
-
     <Button
         android:id="@+id/btn_login"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/rounded_button_green"
         android:text="Log in"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="#1ED760"
+        app:layout_constraintTop_toBottomOf="@id/edit_password"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_password" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="20dp"/>
 
     <!-- Nút Sign up -->
     <Button
         android:id="@+id/btn_signup"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/rounded_button_white"
         android:text="Sign up free"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:backgroundTint="#CCCCCC"
         app:layout_constraintTop_toBottomOf="@id/btn_login"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

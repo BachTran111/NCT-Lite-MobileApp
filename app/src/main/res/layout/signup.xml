@@ -2,22 +2,21 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#121212"
     android:padding="24dp">
 
-    <!-- Mũi tên quay lại -->
+    <!-- Nút quay lại -->
     <ImageButton
         android:id="@+id/btn_back"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_back"
         android:contentDescription="Back"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <!-- Tiêu đề -->
     <TextView
@@ -28,102 +27,101 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/btn_back"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
 
-    <!-- EMAIL -->
+    <!-- Email -->
     <TextView
         android:id="@+id/label_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:text="What's your email?"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        android:layout_marginTop="24dp"/>
 
     <EditText
         android:id="@+id/et_email"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginTop="12dp"
         android:background="#777777"
         android:inputType="textEmailAddress"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_email"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_email" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
 
-    <!-- PASSWORD -->
+    <!-- Password -->
     <TextView
         android:id="@+id/label_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:text="Create a password"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/et_email"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_email" />
+        android:layout_marginTop="20dp"/>
 
     <EditText
         android:id="@+id/et_password"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginTop="12dp"
         android:background="#777777"
         android:inputType="textPassword"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_password"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_password" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
 
-    <!-- NAME -->
+    <!-- Name -->
     <TextView
         android:id="@+id/label_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="What's your name?"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/et_password"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_password" />
+        android:layout_marginTop="20dp"/>
 
     <EditText
         android:id="@+id/et_name"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginTop="12dp"
         android:background="#777777"
         android:inputType="textPersonName"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_name" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
 
     <!-- Nút Create Account -->
     <Button
         android:id="@+id/btn_create_account"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="32dp"
+        android:layout_height="50dp"
         android:backgroundTint="#1ED760"
         android:text="Create Account"
         android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:cornerRadius="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_name" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
