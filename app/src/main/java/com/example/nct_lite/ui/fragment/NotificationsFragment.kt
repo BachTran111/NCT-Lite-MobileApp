@@ -1,4 +1,4 @@
-package com.example.nct_lite.ui.notifications
+package com.example.nct_lite.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.nct_lite.databinding.FragmentNotificationsBinding
+import com.example.nct_lite.viewmodel.NotificationsViewModel
 
 class NotificationsFragment : Fragment() {
 
@@ -17,9 +18,9 @@ private var _binding: FragmentNotificationsBinding? = null
   private val binding get() = _binding!!
 
   override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
   ): View {
     val notificationsViewModel =
             ViewModelProvider(this).get(NotificationsViewModel::class.java)

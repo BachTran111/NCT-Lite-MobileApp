@@ -1,7 +1,8 @@
-package com.example.nct_lite
+package com.example.nct_lite.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nct_lite.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {

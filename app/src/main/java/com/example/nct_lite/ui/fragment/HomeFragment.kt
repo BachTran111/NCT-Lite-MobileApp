@@ -1,4 +1,4 @@
-package com.example.nct_lite.ui.home
+package com.example.nct_lite.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.nct_lite.databinding.FragmentHomeBinding
+import com.example.nct_lite.viewmodel.HomeViewModel
 
 class HomeFragment : Fragment() {
 
@@ -17,9 +18,9 @@ private var _binding: FragmentHomeBinding? = null
   private val binding get() = _binding!!
 
   override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
   ): View {
     val homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)

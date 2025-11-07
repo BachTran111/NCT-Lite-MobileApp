@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#121212"
     android:padding="24dp"
-    tools:context=".SignupActivity">
+    tools:context=".ui.activity.SignupActivity">
 
     <!-- Mũi tên quay lại -->
     <ImageButton

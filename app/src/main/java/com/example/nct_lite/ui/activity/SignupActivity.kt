@@ -1,4 +1,4 @@
-package com.example.nct_lite
+package com.example.nct_lite.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,9 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nct_lite.ui.activity.ChooseArtistsActivity
+import com.example.nct_lite.R
+import com.example.nct_lite.ui.activity.StartActivity
 
 class SignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

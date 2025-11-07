@@ -14,7 +14,7 @@
 
         <!-- Màn hình khởi động -->
         <activity
-            android:name=".StartActivity"
+            android:name=".ui.activity.StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,9 +23,9 @@
         </activity>
 
         <!-- Màn hình chính -->
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".ChooseArtistsActivity"/>
+        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.activity.SignupActivity" />
+        <activity android:name=".ui.activity.ChooseArtistsActivity"/>
     </application>
 
 </manifest>

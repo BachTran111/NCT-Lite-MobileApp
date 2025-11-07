@@ -1,4 +1,4 @@
-package com.example.nct_lite.ui.notifications
+package com.example.nct_lite.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
