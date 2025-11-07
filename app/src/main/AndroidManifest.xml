@@ -26,6 +26,7 @@
         <activity android:name=".ui.activity.MainActivity" />
         <activity android:name=".ui.activity.SignupActivity" />
         <activity android:name=".ui.activity.ChooseArtistsActivity"/>
+        <activity android:name=".ui.activity.SearchActivity" />
     </application>
 
 </manifest>
