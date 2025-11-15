@@ -8,10 +8,10 @@ import retrofit2.http.Path
 
 interface   GenreApi {
 
-    @GET("genre")
+    @GET("genres")
     suspend fun getGenres(): Response<GenreListResponse>
 
-    @GET("genre/{id}")
+    @GET("genres/{id}")
     suspend fun getGenreById(
         @Path("id") id: String
     ): Response<GenreResponse>

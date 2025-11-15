@@ -10,15 +10,15 @@ import retrofit2.http.Query
 
 interface SongApi {
 
-    @GET("song")
+    @GET("songs")
     suspend fun getAllSongs(): Response<SongListResponse>
 
-    @GET("song/{id}")
+    @GET("songs/{id}")
     suspend fun getSongById(
         @Path("id") id: String
     ): Response<SongResponse>
 
-    @GET("song/search")
+    @GET("songs/search")
     suspend fun searchSongs(
         @Query("q") keyword: String
     ): Response<SongListResponse>
