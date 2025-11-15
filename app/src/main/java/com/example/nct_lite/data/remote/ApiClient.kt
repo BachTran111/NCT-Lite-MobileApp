@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
@@ -31,6 +32,9 @@ object ApiClient {
     }
 
     private val client = OkHttpClient.Builder()
+        .connectTimeout(10, TimeUnit.SECONDS) // Timeout cho kết nối
+        .readTimeout(30, TimeUnit.SECONDS) // Timeout cho đọc dữ liệu
+        .writeTimeout(30, TimeUnit.SECONDS) // Timeout cho ghi dữ liệu
         .addInterceptor(loggingInterceptor)
         .addInterceptor(authInterceptor)
         .build()

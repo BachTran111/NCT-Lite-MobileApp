@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
+import com.example.nct_lite.util.ErrorDisplayHelper
 import com.example.nct_lite.viewmodel.AuthViewModel
 
 class SignupActivity : AppCompatActivity() {
@@ -58,7 +59,18 @@ class SignupActivity : AppCompatActivity() {
             }
 
             result.onFailure { e ->
-                Toast.makeText(this, e.message ?: "Register error", Toast.LENGTH_SHORT).show()
+                val errorMessage = e.message ?: "Đăng ký thất bại"
+                // Log để debug
+                android.util.Log.e("SignupActivity", "Register failed: $errorMessage", e)
+                
+                // Nếu là lỗi kết nối (message chứa "không thể kết nối" hoặc dài), dùng Dialog
+                if (errorMessage.contains("Không thể kết nối", ignoreCase = true) || 
+                    errorMessage.length > 80) {
+                    ErrorDisplayHelper.showConnectionError(this, errorMessage)
+                } else {
+                    // Lỗi ngắn thì dùng Toast
+                    ErrorDisplayHelper.showErrorToast(this, errorMessage)
+                }
             }
         }
     }

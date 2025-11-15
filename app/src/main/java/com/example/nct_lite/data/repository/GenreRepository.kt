@@ -1,12 +1,15 @@
 package com.example.nct_lite.data.repository
 
+import android.util.Log
 import com.example.nct_lite.data.remote.ApiClient
 import com.example.nct_lite.data.remote.model.response.GenreListResponse
 import com.example.nct_lite.data.remote.model.response.GenreResponse
+import com.example.nct_lite.util.NetworkErrorHandler
 
 class GenreRepository {
 
     private val api = ApiClient.genreApi
+    private val tag = "GenreRepository"
 
     suspend fun getGenres(): Result<GenreListResponse> {
         return try {
@@ -14,11 +17,14 @@ class GenreRepository {
 
             if (res.isSuccessful && res.body() != null)
                 Result.success(res.body()!!)
-            else
-                Result.failure(Exception("Failed to load genres"))
+            else {
+                Log.e(tag, "Failed to load genres: ${res.code()}")
+                Result.failure(Exception("Không thể tải danh sách thể loại"))
+            }
 
         } catch (e: Exception) {
-            Result.failure(e)
+            NetworkErrorHandler.logError(tag, "getGenres", e)
+            Result.failure(Exception(NetworkErrorHandler.getErrorMessage(e)))
         }
     }
 
@@ -28,11 +34,14 @@ class GenreRepository {
 
             if (res.isSuccessful && res.body() != null)
                 Result.success(res.body()!!)
-            else
-                Result.failure(Exception("Failed to load genre $id"))
+            else {
+                Log.e(tag, "Failed to load genre $id: ${res.code()}")
+                Result.failure(Exception("Không thể tải thông tin thể loại"))
+            }
 
         } catch (e: Exception) {
-            Result.failure(e)
+            NetworkErrorHandler.logError(tag, "getGenreById", e)
+            Result.failure(Exception(NetworkErrorHandler.getErrorMessage(e)))
         }
     }
 }

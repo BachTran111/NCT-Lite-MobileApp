@@ -1,11 +1,14 @@
 package com.example.nct_lite.data.repository
 
+import android.util.Log
 import com.example.nct_lite.data.remote.ApiClient
 import com.example.nct_lite.data.remote.model.response.PlayHistoryResponse
+import com.example.nct_lite.util.NetworkErrorHandler
 
 class HistoryRepository {
 
     private val api = ApiClient.historyApi
+    private val tag = "HistoryRepository"
 
     suspend fun getHistory(): Result<PlayHistoryResponse> {
         return try {
@@ -13,11 +16,14 @@ class HistoryRepository {
 
             if (res.isSuccessful && res.body() != null)
                 Result.success(res.body()!!)
-            else
-                Result.failure(Exception("Failed to load play history"))
+            else {
+                Log.e(tag, "Failed to load play history: ${res.code()}")
+                Result.failure(Exception("Không thể tải lịch sử phát"))
+            }
 
         } catch (e: Exception) {
-            Result.failure(e)
+            NetworkErrorHandler.logError(tag, "getHistory", e)
+            Result.failure(Exception(NetworkErrorHandler.getErrorMessage(e)))
         }
     }
 
@@ -27,11 +33,14 @@ class HistoryRepository {
 
             if (res.isSuccessful && res.body() != null)
                 Result.success(res.body()!!)
-            else
-                Result.failure(Exception("Failed to add history"))
+            else {
+                Log.e(tag, "Failed to add history: ${res.code()}")
+                Result.failure(Exception("Không thể thêm vào lịch sử"))
+            }
 
         } catch (e: Exception) {
-            Result.failure(e)
+            NetworkErrorHandler.logError(tag, "addToHistory", e)
+            Result.failure(Exception(NetworkErrorHandler.getErrorMessage(e)))
         }
     }
 }
