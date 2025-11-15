@@ -13,3 +13,4 @@ data class AlbumResponse(
     val message: String,
     val metadata: Album
 )
+
