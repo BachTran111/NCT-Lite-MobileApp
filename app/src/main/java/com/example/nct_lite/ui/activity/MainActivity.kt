@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // ✅ Gắn Toolbar làm ActionBar
         setSupportActionBar(binding.toolbar)
 
         val navHostFragment = supportFragmentManager
