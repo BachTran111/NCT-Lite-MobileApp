@@ -1,14 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="#121212"
-    android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.search.SearchFragment">
 
+    <!-- Tiêu đề Search -->
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Search"
-        android:textSize="24sp"
+        android:textSize="28sp"
+        android:textStyle="bold"
         android:textColor="@android:color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_marginBottom="24dp" />
+
+    <!-- Thanh tìm kiếm -->
+    <EditText
+        android:id="@+id/edit_search"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:hint="Tìm kiếm bài hát, nghệ sĩ, album..."
+        android:textColor="@android:color/white"
+        android:textColorHint="#AAAAAA"
+        android:textSize="16sp"
+        android:background="@drawable/search_input_background"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Kết quả tìm kiếm hoặc gợi ý -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Gợi ý tìm kiếm -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gợi ý tìm kiếm"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Danh sách gợi ý -->
+            <LinearLayout
+                android:id="@+id/container_search_suggestions"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Kết quả tìm kiếm -->
+            <TextView
+                android:id="@+id/text_search_results"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Kết quả tìm kiếm"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone" />
+
+            <!-- Container cho kết quả tìm kiếm -->
+            <LinearLayout
+                android:id="@+id/container_search_results"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
 </LinearLayout>

@@ -5,21 +5,20 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
-
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.nct_lite.ui.fragment.HomeFragment"
         android:label="Home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.nct_lite.ui.fragment.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_search"
+        android:name="com.example.nct_lite.ui.search.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.nct_lite.ui.fragment.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_library"
+        android:name="com.example.nct_lite.ui.library.LibraryFragment"
+        android:label="Library"
+        tools:layout="@layout/fragment_library" />
 </navigation>
