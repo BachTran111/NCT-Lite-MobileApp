@@ -7,25 +7,36 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
 
+/**
+ * ChooseArtistsActivity - Màn hình chọn nghệ sĩ yêu thích
+ * 
+ * Flow:
+ * 1. SignupActivity -> ChooseArtistsActivity (sau khi đăng ký thành công)
+ * 2. ChooseArtistsActivity -> MainActivity (sau khi chọn artists và nhấn Next)
+ *    MainActivity sẽ tự động hiển thị HomeFragment (startDestination)
+ */
 class ChooseArtistsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.choose_artists) // Đảm bảo tên layout đúng với file XML
+        setContentView(R.layout.choose_artists)
 
-        // Kiểm tra ID của các thành phần trong XML phải khớp với R.id.*
-        val btnBack = findViewById<ImageButton>(R.id.btn_back) // Đảm bảo XML có ImageButton với ID btn_back
-        val btnNext = findViewById<Button>(R.id.btn_next)      // Đảm bảo XML có Button với ID btn_next
+        val btnBack = findViewById<ImageButton>(R.id.btn_back)
+        val btnNext = findViewById<Button>(R.id.btn_next)
 
-        // Quay lại Signup hoặc Login
+        // Quay lại màn hình trước (SignupActivity)
         btnBack.setOnClickListener {
             finish()
         }
 
-        // Chuyển sang màn hình chính (MainActivity)
+        // Chuyển đến MainActivity - MainActivity sẽ tự động hiển thị HomeFragment
+        // vì HomeFragment là startDestination trong mobile_navigation.xml
         btnNext.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+            // Clear các activity phía trên trong stack để người dùng không thể quay lại
+            // StartActivity và SignupActivity bằng nút back
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
-            finish()
+            finish() // Đóng ChooseArtistsActivity
         }
     }
 }

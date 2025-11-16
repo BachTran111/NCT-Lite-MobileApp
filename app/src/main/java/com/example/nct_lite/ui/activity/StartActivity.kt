@@ -18,6 +18,10 @@ class StartActivity : AppCompatActivity() {
         binding = StartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Pre-fill tài khoản test: admin/admin
+        binding.editUsername.setText("admin")
+        binding.editPassword.setText("admin")
+
         observeLoginResponse()
 
         binding.btnLogin.setOnClickListener {
