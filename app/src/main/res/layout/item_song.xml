@@ -20,6 +20,8 @@
         android:layout_marginStart="12dp">
 
         <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:id="@+id/text_song_title"
             android:text="See You Again"
             android:textSize="16sp"
@@ -27,6 +29,8 @@
             android:textStyle="bold" />
 
         <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:id="@+id/text_song_artist"
             android:text="Charlie Puth, Wiz Khalifa"
             android:textSize="14sp"
