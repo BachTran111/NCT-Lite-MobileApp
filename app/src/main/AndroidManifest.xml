@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.nct_lite">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -18,18 +17,16 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         >
 
-        <!-- Màn hình khởi động -->
+        <!-- Màn hình chính -->
         <activity
-            android:name=".ui.activity.StartActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Màn hình chính -->
-        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.activity.StartActivity" />
         <activity android:name=".ui.activity.SignupActivity" />
         <activity android:name=".ui.activity.ChooseArtistsActivity"/>
     </application>

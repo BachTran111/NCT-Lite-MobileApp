@@ -1,15 +1,13 @@
-package com.example.spotify
+package com.example.nct_lite.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.ImageButton
-import android.content.Intent
-import android.widget.EditText
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
 
-class Settings : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
@@ -19,14 +17,18 @@ class Settings : AppCompatActivity() {
         val btnArrow = findViewById<ImageButton>(R.id.arrowButton)
 
         btnUpload.setOnClickListener {
-            val intent = Intent(this, useruploadmusic::class.java)
+            val intent = Intent(this, UserUploadMusicActivity::class.java)
             startActivity(intent)
         }
 
         btnBack.setOnClickListener {
-            val intent = Intent(this, user_library::class.java)
+            val intent = Intent(this, LibraryActivity::class.java)
             startActivity(intent)
         }
 
+        btnArrow.setOnClickListener {
+            val intent = Intent(this, LibraryActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

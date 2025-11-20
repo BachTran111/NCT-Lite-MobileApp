@@ -1,4 +1,4 @@
-package com.example.spotify
+package com.example.nct_lite.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,20 +10,19 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
 import com.squareup.picasso.Picasso
 
-data class Song(
+data class PlaylistSong(
     val title: String,
     val artist: String,
     val coverUrl: String
 )
 
-class Playlist_review : AppCompatActivity() {
+class PlaylistReviewActivity : AppCompatActivity() {
 
-    // Giả sử bạn có dữ liệu từ DB
     private val songList = listOf(
-        Song("Love Me Do", "The Beatles", "https://example.com/cover1.jpg"),
-        Song("From Me To You", "The Beatles", "https://example.com/cover2.jpg"),
-        Song("She Loves You", "The Beatles", "https://example.com/cover3.jpg"),
-        Song("I Want To Hold Your Hand", "The Beatles", "https://example.com/cover4.jpg")
+        PlaylistSong("Love Me Do", "The Beatles", "https://example.com/cover1.jpg"),
+        PlaylistSong("From Me To You", "The Beatles", "https://example.com/cover2.jpg"),
+        PlaylistSong("She Loves You", "The Beatles", "https://example.com/cover3.jpg"),
+        PlaylistSong("I Want To Hold Your Hand", "The Beatles", "https://example.com/cover4.jpg")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +32,6 @@ class Playlist_review : AppCompatActivity() {
         val playlistContainer = findViewById<LinearLayout>(R.id.playlistsContainer)
         val btnBack = findViewById<ImageButton>(R.id.btnBack)
 
-        // Tạo item cho từng bài hát
         songList.forEach { song ->
             val itemView = layoutInflater.inflate(R.layout.item_song, playlistContainer, false)
 
@@ -46,21 +44,17 @@ class Playlist_review : AppCompatActivity() {
                 .placeholder(R.drawable.ic_avatar_foreground)
                 .into(imgCover)
 
-            // Set title & artist
             tvTitle.text = song.title
             tvArtist.text = song.artist
 
-            // Click vào item mở màn hình song_view
             itemView.setOnClickListener {
-                val intent = Intent(this, song_view::class.java)
+                val intent = Intent(this, SongViewActivity::class.java)
                 startActivity(intent)
             }
 
             playlistContainer.addView(itemView)
         }
 
-        btnBack.setOnClickListener {
-            finish()
-        }
+        btnBack.setOnClickListener { finish() }
     }
 }

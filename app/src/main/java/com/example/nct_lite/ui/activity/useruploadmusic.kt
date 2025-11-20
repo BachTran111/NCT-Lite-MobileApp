@@ -1,15 +1,14 @@
-package com.example.spotify
+package com.example.nct_lite.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.EditText
 import com.example.nct_lite.R
 
-
-class useruploadmusic : AppCompatActivity() {
+class UserUploadMusicActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.useruploadmusic)
@@ -22,7 +21,7 @@ class useruploadmusic : AppCompatActivity() {
         val mp4 = findViewById<EditText>(R.id.edtMp4)
 
         btnback.setOnClickListener {
-            val intent = Intent(this, user_library::class.java)
+            val intent = Intent(this, LibraryActivity::class.java)
             startActivity(intent)
         }
 

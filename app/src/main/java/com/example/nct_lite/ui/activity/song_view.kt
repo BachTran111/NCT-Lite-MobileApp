@@ -1,4 +1,4 @@
-package com.example.spotify
+package com.example.nct_lite.ui.activity
 
 import android.os.Bundle
 import android.widget.ImageButton
@@ -7,8 +7,8 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.squareup.picasso.Picasso
 import com.example.nct_lite.R
+import com.squareup.picasso.Picasso
 
 class SongViewActivity : AppCompatActivity() {
 

@@ -1,5 +1,6 @@
-package com.example.nct_lite.ui.library
+package com.example.nct_lite.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -8,13 +9,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
-import com.example.nct_lite.ui.fragment.HomeFragment
-import com.example.nct_lite.ui.search.SearchFragment
 import com.example.nct_lite.viewmodel.PlaylistViewModel
 import com.example.nct_lite.viewmodel.UserViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
-import android.content.Intent
 
 
 class LibraryActivity : AppCompatActivity() {
@@ -29,17 +27,18 @@ class LibraryActivity : AppCompatActivity() {
         observeUserData()
         observePlaylists()
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNav.selectedItemId = R.id.navigation_library
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    navigateToMain(R.id.navigation_home)
                     true
                 }
 
                 R.id.navigation_search -> {
-                    startActivity(Intent(this, SearchActivity::class.java))
+                    navigateToMain(R.id.navigation_search)
                     true
                 }
 
@@ -51,6 +50,17 @@ class LibraryActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun navigateToMain(destinationId: Int) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra(MainActivity.EXTRA_START_DESTINATION, destinationId)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        startActivity(intent)
+        if (destinationId != R.id.navigation_library) {
+            finish()
+        }
     }
 
     /** Render user info */

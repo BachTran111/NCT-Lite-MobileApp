@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/navigation_library"
-        android:name="com.example.nct_lite.ui.library.LibraryFragment"
+        android:name="com.example.nct_lite.ui.fragment.LibraryFragment"
         android:label="Library"
         tools:layout="@layout/fragment_library" />
 </navigation>
