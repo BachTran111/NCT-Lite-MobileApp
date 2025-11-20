@@ -28,6 +28,8 @@
         </activity>
         <!-- Màn hình chính -->
         <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.activity.SearchActivity" />
+        <activity android:name=".ui.activity.LibraryActivity" />
         <activity android:name=".ui.activity.SignupActivity" />
         <activity android:name=".ui.activity.ChooseArtistsActivity"/>
     </application>
