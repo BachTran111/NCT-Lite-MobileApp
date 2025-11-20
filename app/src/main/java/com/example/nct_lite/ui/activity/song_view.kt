@@ -32,7 +32,7 @@ class SongViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.song_view)
 
-        // Bind views
+        // connect cho nay de no hien len
         albumArt = findViewById(R.id.album_art)
         albumTitle = findViewById(R.id.album_title)
         songTitle = findViewById(R.id.song_title)
@@ -52,22 +52,20 @@ class SongViewActivity : AppCompatActivity() {
             .placeholder(R.drawable.ic_avatar_background)
             .into(albumArt)
 
-        // Toggle play/pause
         btnPlay.setOnClickListener {
             isPlaying = !isPlaying
             btnPlay.setImageResource(if (isPlaying) R.drawable.ic_play_around else R.drawable.ic_pause_around)
         }
 
-        // Back button
-        btnBack.setOnClickListener { finish() }
+        btnBack.setOnClickListener {
+            finish()
+        }
 
-        // Example Toast for other buttons
         btnNext.setOnClickListener { Toast.makeText(this, "Next", Toast.LENGTH_SHORT).show() }
         btnPrev.setOnClickListener { Toast.makeText(this, "Previous", Toast.LENGTH_SHORT).show() }
         btnShuffle.setOnClickListener { Toast.makeText(this, "Shuffle", Toast.LENGTH_SHORT).show() }
         btnRepeat.setOnClickListener { Toast.makeText(this, "Repeat", Toast.LENGTH_SHORT).show() }
 
-        // ProgressBar listener
         progressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}

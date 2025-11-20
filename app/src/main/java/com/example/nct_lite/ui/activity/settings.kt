@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,7 +15,6 @@ class SettingsActivity : AppCompatActivity() {
 
         val btnUpload = findViewById<Button>(R.id.button38)
         val btnBack = findViewById<Button>(R.id.buttonback)
-        val btnArrow = findViewById<ImageButton>(R.id.arrowButton)
 
         btnUpload.setOnClickListener {
             val intent = Intent(this, UserUploadMusicActivity::class.java)
@@ -26,9 +26,5 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnArrow.setOnClickListener {
-            val intent = Intent(this, LibraryActivity::class.java)
-            startActivity(intent)
-        }
     }
 }

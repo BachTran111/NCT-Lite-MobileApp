@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
 
 data class PlaylistSong(
@@ -31,30 +33,61 @@ class PlaylistReviewActivity : AppCompatActivity() {
 
         val playlistContainer = findViewById<LinearLayout>(R.id.playlistsContainer)
         val btnBack = findViewById<ImageButton>(R.id.btnBack)
+        val btnPlay = findViewById<ImageButton>(R.id.btnPlay)
+
+        btnPlay.setOnClickListener {
+            val intent = Intent(this, SongViewActivity::class.java)
+            startActivity(intent)
+        }
+
+
+        btnBack.setOnClickListener { finish() }
+    }
+
+    // Data class chứa thông tin bài hát, nhớ check r chỉnh sửa cho đúng theo DB nha, chỗ này chỉ lấy title với artist với Url th
+    data class SongData(
+        val title: String,
+        val artist: String,
+        val coverUrl: String
+    )
+
+    fun updateSongList(songList: List<SongData>) {
+        val playlistContainer = findViewById<ScrollView>(R.id.playlistsContainer)
 
         songList.forEach { song ->
-            val itemView = layoutInflater.inflate(R.layout.item_song, playlistContainer, false)
+            // Inflate item_song.xml
+            val itemView = layoutInflater.inflate(R.layout.item_playlist_song, playlistContainer, false)
 
+            // Lấy các view con
             val imgCover = itemView.findViewById<ImageView>(R.id.imgCover)
             val tvTitle = itemView.findViewById<TextView>(R.id.tvSongTitle)
             val tvArtist = itemView.findViewById<TextView>(R.id.tvArtist)
 
+            // Set dữ liệu
+            tvTitle.text = song.title
+            tvArtist.text = song.artist
+
+            // Load hình ảnh bằng Picasso
             Picasso.get()
                 .load(song.coverUrl)
                 .placeholder(R.drawable.ic_avatar_foreground)
                 .into(imgCover)
 
-            tvTitle.text = song.title
-            tvArtist.text = song.artist
-
+            // Xử lý click item (nếu muốn mở activity chi tiết)
             itemView.setOnClickListener {
                 val intent = Intent(this, SongViewActivity::class.java)
+                // Có thể truyền dữ liệu bài hát qua intent nếu cần
+                intent.putExtra("songTitle", song.title)
+                intent.putExtra("songArtist", song.artist)
+                intent.putExtra("songCover", song.coverUrl)
                 startActivity(intent)
             }
 
+            // Thêm item vào container
             playlistContainer.addView(itemView)
         }
-
-        btnBack.setOnClickListener { finish() }
     }
+
+
+
 }

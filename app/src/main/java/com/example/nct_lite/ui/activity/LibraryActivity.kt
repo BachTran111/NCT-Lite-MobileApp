@@ -13,12 +13,16 @@ import com.example.nct_lite.viewmodel.PlaylistViewModel
 import com.example.nct_lite.viewmodel.UserViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
+import android.widget.ImageButton
 
 
-class LibraryActivity : AppCompatActivity() {
+
+class LibraryActivity : MainActivity() {
 
     private val userViewModel: UserViewModel by viewModels()
     private val playlistViewModel: PlaylistViewModel by viewModels()
+
+    val btnMore = findViewById<ImageButton>(R.id.btnMore)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,40 +31,12 @@ class LibraryActivity : AppCompatActivity() {
         observeUserData()
         observePlaylists()
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNav.selectedItemId = R.id.navigation_library
-
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_home -> {
-                    navigateToMain(R.id.navigation_home)
-                    true
-                }
-
-                R.id.navigation_search -> {
-                    navigateToMain(R.id.navigation_search)
-                    true
-                }
-
-                R.id.navigation_library -> {
-                    true
-                }
-
-                else -> false
-            }
+        btnMore.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
         }
 
-    }
 
-    private fun navigateToMain(destinationId: Int) {
-        val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra(MainActivity.EXTRA_START_DESTINATION, destinationId)
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        }
-        startActivity(intent)
-        if (destinationId != R.id.navigation_library) {
-            finish()
-        }
     }
 
     /** Render user info */
