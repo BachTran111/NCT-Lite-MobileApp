@@ -1,5 +1,6 @@
 package com.example.nct_lite.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,16 +15,17 @@ import com.example.nct_lite.data.remote.model.Genre
 import com.example.nct_lite.data.remote.model.Song
 import com.example.nct_lite.data.remote.model.response.PlayHistoryResponse
 import com.example.nct_lite.databinding.FragmentHomeBinding
+import com.example.nct_lite.ui.search.SearchFragment
 import com.example.nct_lite.viewmodel.AlbumViewModel
 import com.example.nct_lite.viewmodel.GenreViewModel
 import com.example.nct_lite.viewmodel.HistoryViewModel
 import com.example.nct_lite.viewmodel.SongViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
     private val songViewModel: SongViewModel by viewModels()
     private val albumViewModel: AlbumViewModel by viewModels()
     private val genreViewModel: GenreViewModel by viewModels()
@@ -44,10 +46,35 @@ class HomeFragment : Fragment() {
 
         // Gọi API khi Fragment được tạo
         songViewModel.loadAllSongs()  // Quick Pick Songs
-        genreViewModel.getGenres()  // Artists You Like
-        historyViewModel.getHistory()  // Favorite Songs
-        albumViewModel.getAllAlbums()  // Best Albums
+        genreViewModel.getGenres()    // Artists You Like
+        historyViewModel.getHistory() // Favorite Songs
+        albumViewModel.getAllAlbums() // Best Albums
+
+        val bottomNav = binding.bottomNavigation
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.navigation_home -> {
+                    true
+                }
+                R.id.navigation_search -> {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, SearchFragment())
+                        .commit()
+                    true
+                }
+                R.id.navigation_library -> {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, LibraryFragment())
+                        .commit()
+                    true
+                }
+                else -> false
+            }
+        }
     }
+
+
 
     // Xử lý cập nhật UI khi các ViewModel trả về dữ liệu
     private fun observeData() {
@@ -152,4 +179,7 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null // Clean up binding when view is destroyed
     }
+
+
+
 }
