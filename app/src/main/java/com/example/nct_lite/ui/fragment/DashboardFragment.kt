@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.nct_lite.databinding.FragmentDashboardBinding
-import com.example.nct_lite.viewmodel.DashboardViewModel
+import com.example.nct_lite.viewmodel.dashboard.DashboardViewModel
 
 class DashboardFragment : Fragment() {
 

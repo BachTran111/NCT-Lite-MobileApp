@@ -9,25 +9,29 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.nct_lite.R
-import com.example.nct_lite.data.remote.model.Album
-import com.example.nct_lite.data.remote.model.Genre
-import com.example.nct_lite.data.remote.model.Song
-import com.example.nct_lite.data.remote.model.response.PlayHistoryResponse
+import com.example.nct_lite.data.album.response.AlbumMetadata
+import com.example.nct_lite.data.genre.model.Genre
+import com.example.nct_lite.data.history.response.PlayHistoryResponse
+import com.example.nct_lite.data.song.response.SongMetadata
 import com.example.nct_lite.databinding.FragmentHomeBinding
-import com.example.nct_lite.viewmodel.AlbumViewModel
-import com.example.nct_lite.viewmodel.GenreViewModel
-import com.example.nct_lite.viewmodel.HistoryViewModel
-import com.example.nct_lite.viewmodel.SongViewModel
+import com.example.nct_lite.viewmodel.album.AlbumViewModel
+import com.example.nct_lite.viewmodel.album.AlbumViewModelFactory
+import com.example.nct_lite.viewmodel.genre.GenreViewModel
+import com.example.nct_lite.viewmodel.genre.GenreViewModelFactory
+import com.example.nct_lite.viewmodel.history.HistoryViewModel
+import com.example.nct_lite.viewmodel.history.HistoryViewModelFactory
+import com.example.nct_lite.viewmodel.song.SongViewModel
+import com.example.nct_lite.viewmodel.song.SongViewModelFactory
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val songViewModel: SongViewModel by viewModels()
-    private val albumViewModel: AlbumViewModel by viewModels()
-    private val genreViewModel: GenreViewModel by viewModels()
-    private val historyViewModel: HistoryViewModel by viewModels()
+    private val songViewModel: SongViewModel by viewModels { SongViewModelFactory() }
+    private val albumViewModel: AlbumViewModel by viewModels { AlbumViewModelFactory() }
+    private val genreViewModel: GenreViewModel by viewModels { GenreViewModelFactory() }
+    private val historyViewModel: HistoryViewModel by viewModels { HistoryViewModelFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,7 +90,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun populateQuickPickSongs(songs: List<Song>) {
+    private fun populateQuickPickSongs(songs: List<SongMetadata>) {
         val row1Container = binding.containerQuickPickRow1
         val row2Container = binding.containerQuickPickRow2
         val row3Container = binding.containerQuickPickRow3
@@ -129,7 +133,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun populateBestAlbums(response: List<Album>) {
+    private fun populateBestAlbums(response: List<AlbumMetadata>) {
         val container = binding.containerBestAlbums
         container.removeAllViews()
 

@@ -5,18 +5,28 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.nct_lite.databinding.StartBinding
-import com.example.nct_lite.viewmodel.AuthViewModel
-
+import com.example.nct_lite.viewmodel.auth.AuthViewModel
+import com.example.nct_lite.MyApplication
+import com.example.nct_lite.viewmodel.auth.AuthViewModelFactory
+import com.example.nct_lite.data.auth.AuthRepository
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding: StartBinding
-    private val authViewModel: AuthViewModel by viewModels()
+    private lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = StartBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Lấy repository từ AppContainer trong Application
+        val app = application as MyApplication
+        val factory = AuthViewModelFactory(app.appContainer.authRepository)
+
+        // Tạo ViewModel bằng factory
+        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
         observeLoginResponse()
 
@@ -33,8 +43,7 @@ class StartActivity : AppCompatActivity() {
         }
 
         binding.btnSignup.setOnClickListener {
-            val intent = Intent(this, SignupActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, SignupActivity::class.java))
         }
     }
 
@@ -43,12 +52,11 @@ class StartActivity : AppCompatActivity() {
             result.onSuccess {
                 Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
 
-            result.onFailure { e ->
+            result.onFailure {
                 Toast.makeText(this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show()
             }
         }

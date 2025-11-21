@@ -1,6 +1,6 @@
-package com.example.nct_lite.data.remote.model.response
+package com.example.nct_lite.data.genre.response
 
-import com.example.nct_lite.data.remote.model.Genre
+import com.example.nct_lite.data.genre.model.Genre
 
 data class GenreListResponse(
     val status: String,

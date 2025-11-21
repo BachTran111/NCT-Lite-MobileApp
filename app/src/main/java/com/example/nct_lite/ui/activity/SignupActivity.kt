@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
-import com.example.nct_lite.viewmodel.AuthViewModel
+import com.example.nct_lite.viewmodel.auth.AuthViewModel
 
 class SignupActivity : AppCompatActivity() {
 

@@ -10,15 +10,15 @@
 //import androidx.core.view.isVisible
 //import androidx.recyclerview.widget.LinearLayoutManager
 //import com.example.nct_lite.R
-//import com.example.nct_lite.data.remote.model.Album
+//import com.example.nct_lite.data.album.model.Album
 //import com.example.nct_lite.databinding.HomeBinding
-//import com.example.nct_lite.viewmodel.AlbumViewModel
-//import com.example.nct_lite.viewmodel.GenreViewModel
-//import com.example.nct_lite.viewmodel.HistoryViewModel
-//import com.example.nct_lite.viewmodel.SongViewModel
-//import com.example.nct_lite.data.remote.model.Song
-//import com.example.nct_lite.data.remote.model.response.AlbumResponse
-//import com.example.nct_lite.data.remote.model.response.GenreListResponse
+//import com.example.nct_lite.viewmodel.album.AlbumViewModel
+//import com.example.nct_lite.viewmodel.genre.GenreViewModel
+//import com.example.nct_lite.viewmodel.history.HistoryViewModel
+//import com.example.nct_lite.viewmodel.song.SongViewModel
+//import com.example.nct_lite.data.song.model.Song
+//import com.example.nct_lite.data.album.response.AlbumResponse
+//import com.example.nct_lite.data.genre.response.GenreListResponse
 //import com.example.nct_lite.data.remote.model.response.PlayHistoryResponse
 //
 //class HomeActivity : AppCompatActivity() {

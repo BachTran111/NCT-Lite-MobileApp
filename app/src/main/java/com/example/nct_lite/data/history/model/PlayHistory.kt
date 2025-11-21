@@ -1,4 +1,6 @@
-package com.example.nct_lite.data.remote.model
+package com.example.nct_lite.data.history.model
+
+import com.example.nct_lite.data.song.model.Song
 
 data class HistoryItem(
     val song: Song,
