@@ -6,4 +6,6 @@
     <string name="title_search">Search</string>
     <string name="title_library">Your Library</string>
     <string name="feature_updating">Tính năng đang được phát triển</string>
+    <string name="album_year_template">Album • %1$s</string>
+    <string name="genre_template">Thể loại: %1$s</string>
 </resources>

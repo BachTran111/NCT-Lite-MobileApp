@@ -173,6 +173,24 @@
         app:layout_constraintTop_toBottomOf="@+id/button37"
         app:backgroundTint="@null"/>
 
+    <Button
+        android:id="@+id/btnAdmin"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:text="Admin Panel"
+        android:textSize="16sp"
+        android:gravity="start|center_vertical"
+        android:textAlignment="viewStart"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#FFFFFF"
+        android:drawableEnd="@drawable/outline_arrow_forward_ios_24"
+        android:drawableTint="#E0E0E0"
+        app:layout_constraintTop_toBottomOf="@id/button38"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:backgroundTint="@null"/>
+
     <LinearLayout
         android:id="@+id/musicBar"
         android:layout_width="0dp"
@@ -267,7 +285,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"/>
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        tools:ignore="NotSibling" />
 
 
 

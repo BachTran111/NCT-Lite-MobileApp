@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".`settings.kl`"
+    tools:context=".ui.admin.AdminEditSongFragment"
     android:fontFamily="@font/montserrat_light">
 
     <!-- Back button -->
@@ -212,6 +212,8 @@
             android:id="@+id/button12"
             android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_width="0dp"
+
             android:text="Preview"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="0dp"
@@ -231,6 +233,8 @@
             android:id="@+id/button15"
             android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_width="0dp"
+
             android:drawableTop="@drawable/ic_manage"
             android:drawableTint="#FFFFFF"
             android:gravity="center"

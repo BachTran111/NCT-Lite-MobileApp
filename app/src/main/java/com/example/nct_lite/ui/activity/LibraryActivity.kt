@@ -2,6 +2,8 @@ package com.example.nct_lite.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -9,94 +11,131 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
-import com.example.nct_lite.viewmodel.PlaylistViewModel
-import com.example.nct_lite.viewmodel.UserViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.nct_lite.ui.activity.PlaylistReviewActivity
+import com.example.nct_lite.data.album.response.AlbumMetadata
+import com.example.nct_lite.viewmodel.album.AlbumViewModel
+import com.example.nct_lite.viewmodel.album.AlbumViewModelFactory
+import com.example.nct_lite.viewmodel.genre.GenreViewModel
+import com.example.nct_lite.viewmodel.genre.GenreViewModelFactory
+import com.example.nct_lite.viewmodel.song.SongViewModel
+import com.example.nct_lite.viewmodel.song.SongViewModelFactory
 import com.squareup.picasso.Picasso
-import android.widget.ImageButton
 
+class LibraryActivity : AppCompatActivity() {
 
+    private val albumViewModel: AlbumViewModel by viewModels { AlbumViewModelFactory() }
+    private val songViewModel: SongViewModel by viewModels { SongViewModelFactory() }
+    private val genreViewModel: GenreViewModel by viewModels { GenreViewModelFactory() }
 
-class LibraryActivity : MainActivity() {
+    private lateinit var playlistsContainer: LinearLayout
+    private lateinit var avatarView: ImageView
+    private lateinit var playlistsCountView: TextView
+    private lateinit var followersCountView: TextView
+    private lateinit var followingCountView: TextView
 
-    private val userViewModel: UserViewModel by viewModels()
-    private val playlistViewModel: PlaylistViewModel by viewModels()
-
-    val btnMore = findViewById<ImageButton>(R.id.btnMore)
+    private var playlistsCount = 0
+    private var followersCount = 0
+    private var followingCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_library)
 
-        observeUserData()
-        observePlaylists()
+        playlistsContainer = findViewById(R.id.playlistsContainer)
+        avatarView = findViewById(R.id.imgAvatar)
+        playlistsCountView = findViewById(R.id.tvPlaylistsCount)
+        followersCountView = findViewById(R.id.tvFollowersCount)
+        followingCountView = findViewById(R.id.tvFollowingCount)
+
+        val btnMore = findViewById<ImageButton>(R.id.btnMore)
+        val btnEditProfile = findViewById<Button>(R.id.btnEditProfile)
 
         btnMore.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        btnEditProfile.setOnClickListener {
+            Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show()
         }
 
-
+        observeData()
+        albumViewModel.getAllAlbums()
+        songViewModel.loadAllSongs()
+        genreViewModel.getGenres()
     }
 
-    /** Render user info */
-    private fun observeUserData() {
-        userViewModel.user.observe(this) { user ->
+    private fun observeData() {
+        albumViewModel.albums.observe(this) { result ->
+            result.onSuccess { response ->
+                playlistsCount = response.metadata.size
+                updateStats()
+                updateAvatar(response.metadata)
+                populatePlaylists(response.metadata)
+            }
+            result.onFailure {
+                Toast.makeText(this, "Không tải được danh sách playlist", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
 
-            val imgAvatar = findViewById<ImageView>(R.id.imgAvatar)
+        songViewModel.songs.observe(this) { result ->
+            result.onSuccess { response ->
+                followersCount = response.metadata.size
+                updateStats()
+            }
+            result.onFailure {
+                Toast.makeText(this, "Không tải được số lượng bài hát", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        genreViewModel.genres.observe(this) { result ->
+            result.onSuccess { response ->
+                followingCount = response.metadata.size
+                updateStats()
+            }
+            result.onFailure {
+                Toast.makeText(this, "Không tải được thể loại", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateStats() {
+        playlistsCountView.text = playlistsCount.toString()
+        followersCountView.text = followersCount.toString()
+        followingCountView.text = followingCount.toString()
+    }
+
+    private fun updateAvatar(albums: List<AlbumMetadata>) {
+        val coverUrl = albums.firstOrNull()?.coverUrl
+        if (!coverUrl.isNullOrEmpty()) {
             Picasso.get()
-                .load(user.avatarUrl)
+                .load(coverUrl)
                 .placeholder(R.drawable.ic_avatar_background)
-                .into(imgAvatar)
-
-            val statsLayout = findViewById<LinearLayout>(R.id.statsLayout)
-
-            if (statsLayout.childCount >= 3) {
-                val playlistsCountText =
-                    (statsLayout.getChildAt(0) as LinearLayout).getChildAt(0) as TextView
-                playlistsCountText.text = user.playlistsCount.toString()
-
-                val followersCountText =
-                    (statsLayout.getChildAt(1) as LinearLayout).getChildAt(0) as TextView
-                followersCountText.text = user.followersCount.toString()
-
-                val followingCountText =
-                    (statsLayout.getChildAt(2) as LinearLayout).getChildAt(0) as TextView
-                followingCountText.text = user.followingCount.toString()
-            }
-        }
-
-        userViewModel.error.observe(this) { message ->
-            Toast.makeText(this, "Error loading user: $message", Toast.LENGTH_SHORT).show()
+                .into(avatarView)
+        } else {
+            avatarView.setImageResource(R.drawable.ic_avatar_background)
         }
     }
 
-    /** Render danh sách playlist */
-    private fun observePlaylists() {
-        val container = findViewById<LinearLayout>(R.id.playlistsContainer)
+    private fun populatePlaylists(albums: List<AlbumMetadata>) {
+        playlistsContainer.removeAllViews()
 
-        playlistViewModel.playlists.observe(this) { playlists ->
-            container.removeAllViews()
+        albums.forEach { album ->
+            val itemView = layoutInflater.inflate(R.layout.item_playlist, playlistsContainer, false)
+            val cover = itemView.findViewById<ImageView>(R.id.playlist_image)
+            val title = itemView.findViewById<TextView>(R.id.playlist_name)
 
-            playlists.forEach { playlist ->
-                val itemView = layoutInflater.inflate(R.layout.item_playlist, container, false)
+            title.text = album.title
 
-                val img = itemView.findViewById<ImageView>(R.id.playlist_image)
-                val name = itemView.findViewById<TextView>(R.id.playlist_name)
+            Picasso.get()
+                .load(album.coverUrl)
+                .placeholder(R.drawable.ic_avatar_background)
+                .into(cover)
 
-                Picasso.get()
-                    .load(playlist.coverUrl)
-                    .placeholder(R.drawable.ic_avatar_background)
-                    .into(img)
-
-                name.text = playlist.name
-
-                container.addView(itemView)
+            itemView.setOnClickListener {
+                startActivity(Intent(this, PlaylistReviewActivity::class.java))
             }
-        }
 
-        playlistViewModel.error.observe(this) { message ->
-            Toast.makeText(this, "Error loading playlists: $message", Toast.LENGTH_SHORT).show()
+            playlistsContainer.addView(itemView)
         }
     }
 }

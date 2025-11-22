@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#212121"
     android:fontFamily="@font/montserrat_light"
-    tools:context=".`adminpreview.kl`">
+    tools:context=".ui.admin.AdminPreviewFragment">
 
     <EditText
         android:id="@+id/etSearch"
@@ -84,6 +84,7 @@
         <Button
             android:id="@+id/button12"
             android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="Preview"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -103,6 +104,8 @@
         <Button
             android:id="@+id/button15"
             android:layout_weight="1"
+            android:layout_width="0dp"
+
             android:layout_height="match_parent"
             android:drawableTop="@drawable/ic_manage"
             android:drawableTint="#80FFFFFF"

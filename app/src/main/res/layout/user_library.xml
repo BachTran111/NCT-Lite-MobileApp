@@ -64,6 +64,7 @@
             android:gravity="center"
             android:padding="16dp">
             <TextView
+                android:id="@+id/tvPlaylistsCount"
                 android:text="23"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,6 +87,7 @@
             android:padding="16dp"
             android:layout_weight="1">
             <TextView
+                android:id="@+id/tvFollowersCount"
                 android:text="58"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,6 +110,7 @@
             android:padding="16dp"
             android:layout_weight="1">
             <TextView
+                android:id="@+id/tvFollowingCount"
                 android:text="43"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

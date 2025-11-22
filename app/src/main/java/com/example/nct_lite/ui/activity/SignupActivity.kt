@@ -8,12 +8,16 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nct_lite.MyApplication
 import com.example.nct_lite.R
-import com.example.nct_lite.viewmodel.AuthViewModel
+import com.example.nct_lite.viewmodel.auth.AuthViewModel
+import com.example.nct_lite.viewmodel.auth.AuthViewModelFactory
 
 class SignupActivity : AppCompatActivity() {
 
-    private val authViewModel: AuthViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels {
+        AuthViewModelFactory((application as MyApplication).appContainer.authRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
