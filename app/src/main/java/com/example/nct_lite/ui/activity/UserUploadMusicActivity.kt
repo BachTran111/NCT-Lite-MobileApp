@@ -47,6 +47,10 @@ class UserUploadMusicActivity : AppCompatActivity() {
         binding.btnPickAudio.setOnClickListener { audioPicker.launch("audio/*") }
         binding.btnPickCover.setOnClickListener { imagePicker.launch("image/*") }
         binding.btnUpload.setOnClickListener { uploadSong() }
+        binding.btnPickCover.setOnLongClickListener {
+            clearFields()
+            true
+        }
     }
 
     private fun clearFields() {

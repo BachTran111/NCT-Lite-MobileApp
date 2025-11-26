@@ -22,6 +22,20 @@ class StartActivity : AppCompatActivity() {
         binding = StartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Nếu đã có token lưu sẵn thì bỏ qua màn đăng nhập
+        val savedToken = com.example.nct_lite.data.SessionManager.getToken(this)
+        val savedRole = com.example.nct_lite.data.SessionManager.getRole(this)
+        if (!savedToken.isNullOrEmpty() && !savedRole.isNullOrEmpty()) {
+            com.example.nct_lite.data.ApiClient.authToken = savedToken
+            startActivity(
+                Intent(this, MainActivity::class.java).apply {
+                    putExtra("USER_ROLE", savedRole)
+                }
+            )
+            finish()
+            return
+        }
+
         // Pre-fill tài khoản test: admin/admin
 //        binding.editUsername.setText("admin")
 //        binding.editPassword.setText("admin")
@@ -50,7 +64,11 @@ class StartActivity : AppCompatActivity() {
         authViewModel.authResponse.observe(this) { result ->
             result.onSuccess {
                 Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
-
+                com.example.nct_lite.data.SessionManager.saveAuth(
+                    this,
+                    it.metadata.token,
+                    it.metadata.role
+                )
                 val intent = Intent(this, MainActivity::class.java).apply {
                     putExtra("USER_ROLE", it.metadata.role)
                 }

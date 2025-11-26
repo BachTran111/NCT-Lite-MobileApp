@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -27,8 +28,11 @@ import com.example.nct_lite.viewmodel.player.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
+import com.example.nct_lite.data.SessionManager
+
 
 open class MainActivity : AppCompatActivity() {
+
     private val playerVM: PlayerViewModel by viewModels()
     private var userRole: String? = null
 
@@ -40,6 +44,7 @@ open class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         userRole = intent.getStringExtra("USER_ROLE")
+            ?: SessionManager.getRole(this)
         setupMiniPlayer()
         setupBottomNav()
         observeMiniPlayer()
@@ -50,33 +55,34 @@ open class MainActivity : AppCompatActivity() {
     }
 
     private fun setupMiniPlayer() {
-    val miniPlayer = findViewById<ConstraintLayout>(R.id.musicBar)
-    val musicBar = miniPlayer.findViewById<ConstraintLayout>(R.id.musicBar)
-    ivCover = musicBar.findViewById<ImageView>(R.id.ivCover)
-    tvTitle = musicBar.findViewById<TextView>(R.id.tvTitle)
-    btnPause = musicBar.findViewById<ImageButton>(R.id.btnPause)
-    tvArtist = musicBar.findViewById(R.id.tvArtist)
+//        val miniPlayer = findViewById<ConstraintLayout>(R.id.miniplayer)
+    val musicBar = findViewById<ConstraintLayout>(R.id.musicBar)
+//        val musicBar = miniPlayer.findViewById<ConstraintLayout>(R.id.musicBar)
+        ivCover = musicBar.findViewById<ImageView>(R.id.ivCover)
+        tvTitle = musicBar.findViewById<TextView>(R.id.tvTitle)
+        btnPause = musicBar.findViewById<ImageButton>(R.id.btnPause)
+        tvArtist = musicBar.findViewById(R.id.tvArtist)
 
-    musicBar.setOnClickListener {
-        val state = playerVM.playerState.value
-        if (state.url.isNotEmpty()) {
-            val fakeSong = SongMetadata(
-                _id = "",
-                title = state.title,
-                artist = state.artist,
-                genreIDs = emptyList(),
-                url = state.url,
-                coverUrl = state.coverUrl,
-                uploaderId = null,
-                createdAt = "",
-                updatedAt = ""
-            )
-            startActivity(SongViewActivity.createIntent(this, fakeSong))
+        musicBar.setOnClickListener {
+            val state = playerVM.playerState.value
+            if (state.url.isNotEmpty()) {
+                val fakeSong = SongMetadata(
+                    _id = "",
+                    title = state.title,
+                    artist = state.artist,
+                    genreIDs = emptyList(),
+                    url = state.url,
+                    coverUrl = state.coverUrl,
+                    uploaderId = null,
+                    createdAt = "",
+                    updatedAt = ""
+                )
+                startActivity(SongViewActivity.createIntent(this, fakeSong))
+            }
         }
-    }
-    btnPause.setOnClickListener {
-        playerVM.pauseOrResume()
-    }
+        btnPause.setOnClickListener {
+            playerVM.pauseOrResume()
+        }
     }
     private fun observeMiniPlayer() {
         lifecycleScope.launch {

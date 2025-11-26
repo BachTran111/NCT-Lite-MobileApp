@@ -13,7 +13,7 @@ class SongRemoteDataSource(private val api: SongApi) {
 
     suspend fun getSongById(id: String) = api.getSongById(id)
 
-    suspend fun searchSongs(keyword: String) = api.searchSongs(keyword)
+    suspend fun searchSongs(keyword: String) = api.searchSongs(keyword, keyword, keyword)
 
     suspend fun uploadSong(
         title: RequestBody,

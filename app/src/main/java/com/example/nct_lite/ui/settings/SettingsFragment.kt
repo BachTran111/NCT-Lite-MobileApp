@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.example.nct_lite.databinding.SettingsBinding
 import com.example.nct_lite.ui.activity.MainActivity
 import com.example.nct_lite.ui.activity.UserUploadMusicActivity
+import com.example.nct_lite.ui.activity.StartActivity
 
 class SettingsFragment : Fragment() {
 
@@ -39,6 +40,13 @@ class SettingsFragment : Fragment() {
         }
         val isAdmin = (activity as? MainActivity)?.isAdmin() == true
         binding.btnAdmin.visibility = if (isAdmin) View.VISIBLE else View.GONE
+
+        binding.btnLogout.setOnClickListener {
+            com.example.nct_lite.data.SessionManager.clear(requireContext())
+            com.example.nct_lite.data.ApiClient.authToken = null
+            startActivity(Intent(requireContext(), StartActivity::class.java))
+            requireActivity().finish()
+        }
     }
 
     override fun onDestroyView() {

@@ -42,11 +42,18 @@ class SearchFragment : Fragment() {
 
         binding.editSearch.doAfterTextChanged { text ->
             val keyword = text?.toString().orEmpty().trim()
-            if (keyword.length >= 2) {
-                songViewModel.search(keyword)
-            } else {
+            if (keyword.length < 2) {
+                //                binding.textSearchResults.visibility = View.GONE
+//                binding.containerSearchResults.removeAllViews()
                 binding.textSearchResults.visibility = View.GONE
+
+                // ⬅️ Lúc này mới render suggestion
+                renderSongList(binding.containerSearchSuggestions, cachedSongs.take(6))
+
                 binding.containerSearchResults.removeAllViews()
+            } else {
+                songViewModel.search(keyword)
+
             }
         }
     }
@@ -55,7 +62,7 @@ class SearchFragment : Fragment() {
         songViewModel.songs.observe(viewLifecycleOwner) { result ->
             result.onSuccess { response ->
                 cachedSongs = response.metadata
-                renderSongList(binding.containerSearchSuggestions, cachedSongs.take(6))
+//                renderSongList(binding.containerSearchSuggestions, cachedSongs.take(6))
             }
             result.onFailure {
                 Toast.makeText(requireContext(), "Không tải được danh sách bài hát", Toast.LENGTH_SHORT).show()

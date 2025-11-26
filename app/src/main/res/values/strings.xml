@@ -8,4 +8,5 @@
     <string name="feature_updating">Tính năng đang được phát triển</string>
     <string name="album_year_template">Album • %1$s</string>
     <string name="genre_template">Thể loại: %1$s</string>
+    <string name="upload_music">UPLOAD MUSIC</string>
 </resources>

@@ -26,9 +26,11 @@ interface SongApi {
 
     @GET("songs/search")
     suspend fun searchSongs(
-        @Query("q") keyword: String
-    ): Response<SongListResponse>
-
+//        @Query("keyword") query: String
+        @Query("artist") artist: String?,
+        @Query("title") title: String?,
+        @Query("genre") genre: String?    ): Response<SongListResponse>
+//    Response<SongListResponse>
     @Multipart
     @POST("songs")
     suspend fun uploadSong(

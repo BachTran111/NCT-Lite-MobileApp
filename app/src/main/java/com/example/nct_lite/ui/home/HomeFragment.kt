@@ -31,6 +31,8 @@ class HomeFragment : Fragment() {
     private val albumViewModel by lazy { ViewModelProvider(this)[AlbumViewModel::class.java] }
     private val historyViewModel by lazy { ViewModelProvider(this)[HistoryViewModel::class.java] }
 
+    private var cachedSongs: List<SongMetadata> = emptyList()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,6 +53,7 @@ class HomeFragment : Fragment() {
     private fun observeData() {
         songViewModel.songs.observe(viewLifecycleOwner) { result ->
             result.onSuccess { response ->
+                cachedSongs = response.metadata
                 populateQuickPickSongs(response.metadata)
                 populateArtists(response.metadata)
             }
@@ -89,6 +92,15 @@ class HomeFragment : Fragment() {
                     .into(imageView)
             } else {
                 imageView.setImageResource(R.drawable.placeholder_artist)
+            }
+
+            view.setOnClickListener {
+                val artistSongs = cachedSongs.filter { it.artist == artist }
+                if (artistSongs.isNotEmpty()) {
+                    startActivity(SongViewActivity.createIntent(requireContext(), artistSongs.first()))
+                } else {
+                    showError("Không có bài cho nghệ sĩ này")
+                }
             }
 
             container.addView(view)

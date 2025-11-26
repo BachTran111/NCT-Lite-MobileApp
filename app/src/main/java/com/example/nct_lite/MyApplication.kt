@@ -1,5 +1,7 @@
 package com.example.nct_lite
 import  android.app.Application
+import com.example.nct_lite.data.ApiClient
+import com.example.nct_lite.data.SessionManager
 import com.example.nct_lite.di.AppContainer
 
 class MyApplication : Application() {
@@ -7,5 +9,6 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         appContainer = AppContainer(this)
+        SessionManager.getToken(this)?.let { ApiClient.authToken = it }
     }
 }

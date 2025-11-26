@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#121212"
-    tools:context=".ui.fragment.LibraryFragment">
+    tools:context=".ui.library.LibraryFragment">
 
     <ImageButton
         android:id="@+id/btnBack"

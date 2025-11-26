@@ -19,7 +19,6 @@
         app:layout_constraintBottom_toTopOf="@id/musicBar" />
 
     <include
-        android:id="@+id/musicBar"
         layout="@layout/mediaplayer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

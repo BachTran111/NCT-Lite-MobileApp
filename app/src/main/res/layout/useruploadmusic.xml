@@ -8,35 +8,34 @@
     tools:context=".ui.activity.UserUploadMusicActivity"
     android:fontFamily="@font/montserrat_light">
 
-    <!-- Back button -->
     <ImageButton
         android:id="@+id/btnBack"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/transparent"
+        android:layout_width="36dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/outline_arrow_back_ios_new_24"
-        app:tint="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="#000000"
+        app:tint="#FFFFFF"
+        />
 
-    <!-- Title -->
     <TextView
         android:id="@+id/tvUpload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upload        "
-        android:textSize="20sp"
+        android:layout_marginTop="18dp"
+        android:text="@string/upload_music"
+        android:textColor="#000000"
+        android:textSize="35sp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginTop="18dp" />
 
-    <!-- Image Upload Box -->
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/imageContainer"
         android:layout_width="120dp"
@@ -88,7 +87,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Icon -->
     <ImageView
         android:layout_width="22dp"
         android:layout_height="22dp"
@@ -99,7 +97,6 @@
         app:layout_constraintBottom_toBottomOf="@id/edtSongName"
         android:layout_marginEnd="12dp" />
 
-    <!-- Author name -->
     <EditText
         android:id="@+id/edtAuthor"
         android:layout_width="0dp"
@@ -117,7 +114,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Icon -->
     <ImageView
         android:layout_width="22dp"
         android:layout_height="22dp"
@@ -128,7 +124,6 @@
         app:layout_constraintBottom_toBottomOf="@id/edtAuthor"
         android:layout_marginEnd="12dp" />
 
-    <!-- Category -->
     <EditText
         android:id="@+id/edtCategory"
         android:layout_width="0dp"
@@ -146,7 +141,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Icon -->
     <ImageView
         android:layout_width="22dp"
         android:layout_height="22dp"
@@ -157,7 +151,6 @@
         app:layout_constraintBottom_toBottomOf="@id/edtCategory"
         android:layout_marginEnd="12dp" />
 
-    <!-- Cover path -->
     <EditText
         android:id="@+id/edtCover"
         android:layout_width="0dp"
@@ -185,7 +178,6 @@
         app:layout_constraintBottom_toBottomOf="@id/edtCover"
         android:layout_marginEnd="12dp" />
 
-    <!-- MP4 file -->
     <EditText
         android:id="@+id/edtMp4"
         android:layout_width="0dp"
@@ -203,7 +195,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Icon -->
     <ImageView
         android:layout_width="22dp"
         android:layout_height="22dp"
@@ -251,7 +242,8 @@
         android:textColor="#FFFFFF"
         app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnPickAudio" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

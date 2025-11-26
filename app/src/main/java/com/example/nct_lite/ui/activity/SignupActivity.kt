@@ -54,7 +54,11 @@ class SignupActivity : AppCompatActivity() {
         authViewModel.authResponse.observe(this) { result ->
             result.onSuccess {
                 Toast.makeText(this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show()
-
+                com.example.nct_lite.data.SessionManager.saveAuth(
+                    this,
+                    it.metadata.token,
+                    it.metadata.role
+                )
                 val intent = Intent(this, ChooseArtistsActivity::class.java)
                 intent.putExtra("USER_NAME", it.metadata.role)
                 startActivity(intent)

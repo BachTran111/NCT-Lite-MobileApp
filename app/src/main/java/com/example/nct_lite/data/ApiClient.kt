@@ -44,11 +44,9 @@ object ApiClient {
             .build()
     }
 
-    // region API Interface
     val authApi: AuthApi by lazy { retrofit.create(AuthApi::class.java) }
     val songApi: SongApi by lazy { retrofit.create(SongApi::class.java) }
     val albumApi: AlbumApi by lazy { retrofit.create(AlbumApi::class.java) }
     val genreApi: GenreApi by lazy { retrofit.create(GenreApi::class.java) }
     val historyApi: HistoryApi by lazy { retrofit.create(HistoryApi::class.java) }
-    // endregion
 }

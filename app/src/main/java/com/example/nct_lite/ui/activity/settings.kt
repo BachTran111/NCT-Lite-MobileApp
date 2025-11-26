@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
+import com.example.nct_lite.ui.library.LibraryFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SettingsActivity : AppCompatActivity() {
@@ -22,7 +23,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         btnBack.setOnClickListener {
-            val intent = Intent(this, LibraryActivity::class.java)
+//            val intent = Intent(this, LibraryActivity::class.java)
+            val intent = Intent(this, LibraryFragment::class.java)
             startActivity(intent)
         }
 

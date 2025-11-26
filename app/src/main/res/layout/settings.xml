@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".`settings.kl`">
+    tools:context=".ui.settings.SettingsFragment">
 
     <LinearLayout
         android:id="@+id/textView2"
@@ -111,7 +111,7 @@
         tools:layout_editor_absoluteY="137dp"
         android:drawableEnd="@drawable/outline_arrow_forward_ios_24"
         android:drawableTint="#E0E0E0"
-        app:backgroundTint="@null" />
+        app:backgroundTint="#333333" />
 
     <Button
         android:id="@+id/button46"
@@ -131,7 +131,7 @@
         android:drawableEnd="@drawable/outline_arrow_forward_ios_24"
         android:drawableTint="#E0E0E0"
         app:layout_constraintTop_toBottomOf="@+id/button45"
-        app:backgroundTint="@null"/>
+        app:backgroundTint="#333333"/>
 
     <Button
         android:id="@+id/button37"
@@ -151,7 +151,7 @@
         android:drawableEnd="@drawable/outline_arrow_forward_ios_24"
         android:drawableTint="#E0E0E0"
         app:layout_constraintTop_toBottomOf="@+id/button46"
-        app:backgroundTint="@null"/>
+        app:backgroundTint="#333333"/>
 
     <Button
         android:id="@+id/button38"
@@ -171,7 +171,7 @@
         android:drawableEnd="@drawable/outline_arrow_forward_ios_24"
         android:drawableTint="#E0E0E0"
         app:layout_constraintTop_toBottomOf="@+id/button37"
-        app:backgroundTint="@null"/>
+        app:backgroundTint="#333333"/>
 
     <Button
         android:id="@+id/btnAdmin"
@@ -189,10 +189,26 @@
         app:layout_constraintTop_toBottomOf="@id/button38"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@null"/>
+        app:backgroundTint="#333333"/>
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:text="Đăng xuất"
+        android:textSize="16sp"
+        android:gravity="start|center_vertical"
+        android:textAlignment="viewStart"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/btnAdmin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:backgroundTint="#333333"/>
 
     <LinearLayout
-        android:id="@+id/musicBar"
+        android:id="@+id/settingsHeaderBar"
         android:layout_width="0dp"
         android:layout_height="58dp"
         android:orientation="horizontal"
@@ -281,7 +297,7 @@
         android:max="100"
         android:indeterminate="false"
         android:progressDrawable="@drawable/music_progress_drawable"
-        app:layout_constraintStart_toEndOf="@id/musicBar"
+        app:layout_constraintStart_toEndOf="@id/settingsHeaderBar"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
