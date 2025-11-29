@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom_sheet_add_to_playlist_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#1C1C1C"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/title_add_to_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add to playlist"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:paddingBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btn_new_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="New playlist"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:backgroundTint="#CCCCCC"/>
+
+    <TextView
+        android:id="@+id/label_recently_updated"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Recently updated"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:paddingTop="12dp"
+        android:paddingBottom="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/container_playlist_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btn_done"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Done"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:backgroundTint="#1ED760"/>
+
+</LinearLayout>
+
