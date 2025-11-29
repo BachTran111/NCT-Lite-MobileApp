@@ -16,6 +16,7 @@ import com.example.nct_lite.data.history.response.PlayHistoryResponse
 import com.example.nct_lite.data.song.model.Song
 import com.example.nct_lite.data.song.response.SongMetadata
 import com.example.nct_lite.databinding.FragmentHomeBinding
+import com.example.nct_lite.ui.activity.MainActivity
 import com.example.nct_lite.ui.activity.SongViewActivity
 import com.example.nct_lite.viewmodel.album.AlbumViewModel
 import com.example.nct_lite.viewmodel.history.HistoryViewModel
@@ -204,6 +205,10 @@ class HomeFragment : Fragment() {
                     .into(imageView)
             } else {
                 imageView.setImageResource(R.drawable.placeholder_album)
+            }
+
+            view.setOnClickListener {
+                (activity as? MainActivity)?.openAlbumDetail(album._id)
             }
 
             container.addView(view)

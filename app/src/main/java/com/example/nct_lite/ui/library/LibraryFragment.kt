@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -112,17 +114,39 @@ class LibraryFragment : Fragment() {
         val container = binding.playlistsContainer
         container.removeAllViews()
 
-        albums.forEach { album ->
+        // Thêm album mặc định (những bài hát người dùng tải lên)
+        val defaultAlbum = AlbumMetadata(
+            _id = "default",
+            title = "Bài hát của tôi",
+            coverUrl = "",
+            artist = TODO(),
+            songIDs = TODO(),
+            genreIDs = TODO(),
+            releaseDate = TODO(),
+            description = TODO(),
+            creatorId = TODO(),
+            isPublic = TODO(),
+            createdAt = TODO(),
+            updatedAt = TODO(),
+            __v = TODO()
+        )
+        val allAlbums = listOf(defaultAlbum) + albums
+
+        allAlbums.forEach { album ->
             val itemView = layoutInflater.inflate(R.layout.item_playlist, container, false)
-            val cover = itemView.findViewById<android.widget.ImageView>(R.id.playlist_image)
-            val title = itemView.findViewById<android.widget.TextView>(R.id.playlist_name)
+            val cover = itemView.findViewById<ImageView>(R.id.playlist_image)
+            val title = itemView.findViewById<TextView>(R.id.playlist_name)
 
             title.text = album.title
 
-            Picasso.get()
-                .load(album.coverUrl)
-                .placeholder(R.drawable.ic_avatar_background)
-                .into(cover)
+            if (!album.coverUrl.isNullOrEmpty()) {
+                Picasso.get()
+                    .load(album.coverUrl)
+                    .placeholder(R.drawable.ic_avatar_background)
+                    .into(cover)
+            } else {
+                cover.setImageResource(R.drawable.ic_avatar_background)
+            }
 
             itemView.setOnClickListener {
                 (activity as? MainActivity)?.openAlbumDetail(album._id)

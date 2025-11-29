@@ -4,6 +4,7 @@ import com.example.nct_lite.data.album.response.AlbumListResponse
 import com.example.nct_lite.data.album.response.AlbumResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface AlbumApi {
@@ -15,4 +16,9 @@ interface AlbumApi {
     suspend fun getAlbumById(
         @Path("id") id: String
     ): Response<AlbumResponse>
+
+    @POST("albums/{id}/add-songs")
+    suspend fun addSongToAlbum(
+        @Path("id") id: String
+    )
 }
