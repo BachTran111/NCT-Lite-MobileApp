@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom_sheet_new_playlist_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#1C1C1C"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/title_new_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_vertical"
+        android:text="Create new playlist"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edit_playlist_name"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/rounded_input_bg"
+        android:hint="Enter name"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="#B3B3B3" />
+
+    <LinearLayout
+        android:id="@+id/actions_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:backgroundTint="#CCCCCC" />
+
+        <Space
+            android:layout_width="12dp"
+            android:layout_height="48dp" />
+
+        <Button
+            android:id="@+id/btn_create"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Create"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:backgroundTint="#1ED760" />
+    </LinearLayout>
+
+</LinearLayout>
