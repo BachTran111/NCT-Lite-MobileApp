@@ -90,6 +90,7 @@ class SearchFragment : Fragment() {
             val titleView = view.findViewById<TextView>(R.id.tvSongTitle)
             val artistView = view.findViewById<TextView>(R.id.tvArtist)
             val imageView = view.findViewById<ImageView>(R.id.imgCover)
+            val moreBtn = view.findViewById<ImageView>(R.id.btnMore)
 
             titleView.text = song.title
             artistView.text = song.artist
@@ -104,6 +105,10 @@ class SearchFragment : Fragment() {
 
             view.setOnClickListener {
                 startActivity(SongViewActivity.createIntent(requireContext(), song))
+            }
+
+            moreBtn.setOnClickListener {
+                com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment().show(parentFragmentManager, "BottomSheetSelected")
             }
 
             container.addView(view)

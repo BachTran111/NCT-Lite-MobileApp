@@ -99,6 +99,7 @@ class PlaylistReviewFragment : Fragment() {
             val cover = itemView.findViewById<ImageView>(R.id.imgCover)
             val title = itemView.findViewById<TextView>(R.id.tvSongTitle)
             val artist = itemView.findViewById<TextView>(R.id.tvArtist)
+            val moreBtn = itemView.findViewById<ImageView>(R.id.btnMore)
 
             title.text = song.title
             artist.text = song.artist
@@ -109,6 +110,10 @@ class PlaylistReviewFragment : Fragment() {
 
             itemView.setOnClickListener {
                 startActivity(SongViewActivity.createIntent(requireContext(), song))
+            }
+
+            moreBtn.setOnClickListener {
+                com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment().show(parentFragmentManager, "BottomSheetSelected")
             }
 
             container.addView(itemView)

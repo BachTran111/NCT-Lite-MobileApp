@@ -90,7 +90,7 @@
             android:id="@+id/icon_add_to_liked"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_heart" />
+            android:src="@drawable/ic_like" />
 
         <TextView
             android:id="@+id/text_add_to_liked"
@@ -140,7 +140,7 @@
             android:id="@+id/icon_download"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_download" />
+            android:src="@drawable/ic_manage" />
 
         <TextView
             android:id="@+id/text_download"

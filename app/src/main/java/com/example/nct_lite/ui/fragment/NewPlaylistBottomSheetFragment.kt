@@ -19,10 +19,6 @@ class NewPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<View>(R.id.btn_cancel)?.setOnClickListener { dismiss() }
-        view.findViewById<View>(R.id.btn_create)?.setOnClickListener {
-            // TODO: read name/description/switch_public and create playlist via ViewModel
-            dismiss()
-        }
+        view.findViewById<View>(R.id.btn_create)?.setOnClickListener { dismiss() }
     }
 }
-
