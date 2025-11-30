@@ -7,5 +7,5 @@ class GenreRemoteDataSource(private val api: GenreApi) {
 
     suspend fun getGenres() = api.getGenres()
 
-    suspend fun getGenreById(id: String) = api.getGenreById(id)
+    // suspend fun getGenreById(id: String) = api.getGenreById(id)
 }

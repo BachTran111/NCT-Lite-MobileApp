@@ -18,8 +18,8 @@ object ApiClient {
     var authToken: String? = null
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-//        level = HttpLoggingInterceptor.Level.HEADERS
+//        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.HEADERS
 
     }
 

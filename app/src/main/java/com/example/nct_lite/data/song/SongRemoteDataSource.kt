@@ -28,4 +28,8 @@ class SongRemoteDataSource(private val api: SongApi) {
     suspend fun approveSong(id: String) = api.approveSong(id)
 
     suspend fun rejectSong(id: String) = api.rejectSong(id)
+
+    suspend fun likeSong(id: String) = api.likeSong(id)
+    
+    suspend fun getMySongs() = api.getMySongs()
 }

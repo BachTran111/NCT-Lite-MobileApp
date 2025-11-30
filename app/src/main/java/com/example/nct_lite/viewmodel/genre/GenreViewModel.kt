@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nct_lite.data.genre.GenreRepository
 import com.example.nct_lite.data.genre.response.GenreListResponse
-import com.example.nct_lite.data.genre.response.GenreResponse
+//import com.example.nct_lite.data.genre.response.GenreResponse
 import kotlinx.coroutines.launch
 
 class GenreViewModel(
@@ -13,7 +13,7 @@ class GenreViewModel(
 ) : ViewModel() {
 
     val genres = MutableLiveData<Result<GenreListResponse>>()
-    val genreDetail = MutableLiveData<Result<GenreResponse>>()
+//    val genreDetail = MutableLiveData<Result<GenreResponse>>()
 
     fun getGenres() {
         viewModelScope.launch {
@@ -21,9 +21,9 @@ class GenreViewModel(
         }
     }
 
-    fun getGenreById(id: String) {
-        viewModelScope.launch {
-            genreDetail.postValue(repo.getGenreById(id))
-        }
-    }
+//    fun getGenreById(id: String) {
+//        viewModelScope.launch {
+//            genreDetail.postValue(repo.getGenreById(id))
+//        }
+//    }
 }

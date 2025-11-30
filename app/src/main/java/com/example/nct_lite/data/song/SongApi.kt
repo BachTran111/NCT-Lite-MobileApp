@@ -26,11 +26,10 @@ interface SongApi {
 
     @GET("songs/search")
     suspend fun searchSongs(
-//        @Query("keyword") query: String
         @Query("artist") artist: String?,
         @Query("title") title: String?,
         @Query("genre") genre: String?    ): Response<SongListResponse>
-//    Response<SongListResponse>
+
     @Multipart
     @POST("songs")
     suspend fun uploadSong(
@@ -40,6 +39,9 @@ interface SongApi {
         @Part song: MultipartBody.Part,
         @Part cover: MultipartBody.Part
     ): Response<SongResponse>
+
+    @GET("songs/me")
+    suspend fun getMySongs(): Response<SongListResponse>
 
     @GET("songs/pending")
     suspend fun getPendingSongs(): Response<SongListResponse>
@@ -53,4 +55,10 @@ interface SongApi {
     suspend fun rejectSong(
         @Path("id") id: String
     ): Response<SongResponse>
+
+    @POST("songs/{id}/like")
+    suspend fun likeSong(
+        @Path("id") id: String
+    ): Response<Unit>
+
 }

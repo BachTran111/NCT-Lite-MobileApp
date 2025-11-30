@@ -3,11 +3,16 @@ package com.example.nct_lite.ui.activity
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.example.nct_lite.data.song.SongRepository
+import com.example.nct_lite.data.genre.model.Genre
 import com.example.nct_lite.databinding.UseruploadmusicBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,14 +21,26 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import com.example.nct_lite.viewmodel.genre.GenreViewModel
+import com.example.nct_lite.viewmodel.genre.GenreViewModelFactory
 import java.io.File
+import androidx.fragment.app.activityViewModels
+import kotlin.getValue
+
 
 class UserUploadMusicActivity : AppCompatActivity() {
 
     private lateinit var binding: UseruploadmusicBinding
     private var audioUri: Uri? = null
     private var coverUri: Uri? = null
-    private val repository = SongRepository()
+    private val songRepository = SongRepository()
+    // private val genreViewModel: GenreViewModel by viewModels { GenreViewModelFactory() }
+    private val genreViewModel: GenreViewModel by viewModels {
+        GenreViewModelFactory(com.example.nct_lite.data.genre.GenreRepository())
+    }
+
+    private var allGenres: List<Genre> = emptyList()
+    private val selectedGenreIds = mutableListOf<String>()
 
     private val audioPicker =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -42,11 +59,21 @@ class UserUploadMusicActivity : AppCompatActivity() {
         binding = UseruploadmusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupListeners()
+        observeGenres()
+        genreViewModel.getGenres()
+    }
+
+    private fun setupListeners() {
         binding.btnBack.setOnClickListener { finish() }
         binding.btnClear.setOnClickListener { clearFields() }
         binding.btnPickAudio.setOnClickListener { audioPicker.launch("audio/*") }
         binding.btnPickCover.setOnClickListener { imagePicker.launch("image/*") }
         binding.btnUpload.setOnClickListener { uploadSong() }
+        binding.edtCategory.setOnClickListener {
+            if (allGenres.isNotEmpty()) showGenreSelectionDialog()
+            else Toast.makeText(this, "Đang tải danh sách thể loại...", Toast.LENGTH_SHORT).show()
+        }
         binding.btnPickCover.setOnLongClickListener {
             clearFields()
             true
@@ -61,29 +88,30 @@ class UserUploadMusicActivity : AppCompatActivity() {
         binding.edtCover.text?.clear()
         audioUri = null
         coverUri = null
+        selectedGenreIds.clear()
     }
 
     private fun uploadSong() {
         val title = binding.edtSongName.text.toString().trim()
         val artist = binding.edtAuthor.text.toString().trim()
-        val categoryInput = binding.edtCategory.text.toString().trim()
         val audio = audioUri
         val cover = coverUri
-        val genreIds = categoryInput.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
-        if (title.isEmpty() || artist.isEmpty() || genreIds.isEmpty() || audio == null || cover == null) {
+        if (title.isEmpty() || artist.isEmpty() || selectedGenreIds.isEmpty() || audio == null || cover == null) {
             Toast.makeText(this, "Vui lòng điền đầy đủ thông tin và chọn file", Toast.LENGTH_SHORT)
                 .show()
             return
         }
 
-        binding.btnUpload.isEnabled = false
+        // Hiển thị ProgressBar và vô hiệu hóa nút bấm
+
+        binding.uploadProgressOverlay.visibility = View.VISIBLE
         lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
                 runCatching {
                     val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
                     val artistBody = artist.toRequestBody("text/plain".toMediaTypeOrNull())
-                    val genreJson = genreIds.joinToString(
+                    val genreJson = selectedGenreIds.joinToString(
                         prefix = "[\"",
                         postfix = "\"]",
                         separator = "\",\""
@@ -92,13 +120,15 @@ class UserUploadMusicActivity : AppCompatActivity() {
                     val songPart = createFilePart("song", audio)
                     val coverPart = createFilePart("cover", cover)
 
-                    repository.uploadSong(titleBody, artistBody, genreBody, songPart, coverPart)
+                    songRepository.uploadSong(titleBody, artistBody, genreBody, songPart, coverPart)
                 }.getOrElse { Result.failure(it) }
             }
-            binding.btnUpload.isEnabled = true
+            // Ẩn ProgressBar sau khi hoàn tất
+            binding.uploadProgressOverlay.visibility = View.GONE
+
             result.onSuccess {
                 Toast.makeText(this@UserUploadMusicActivity, "Upload thành công!", Toast.LENGTH_SHORT).show()
-                finish()
+                clearFields() // Xóa các trường để chuẩn bị cho lần upload tiếp theo
             }.onFailure {
                 Toast.makeText(this@UserUploadMusicActivity, it.message ?: "Upload thất bại", Toast.LENGTH_SHORT).show()
             }
@@ -127,5 +157,41 @@ class UserUploadMusicActivity : AppCompatActivity() {
             }
         }
         return result
+    }
+
+    private fun observeGenres() {
+        genreViewModel.genres.observe(this) { result ->
+            result.onSuccess { response ->
+                allGenres = response.metadata
+            }.onFailure {
+                Toast.makeText(this, "Không thể tải danh sách thể loại", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showGenreSelectionDialog() {
+        val genreNames = allGenres.map { it.name }.toTypedArray()
+        val checkedItems = allGenres.map { selectedGenreIds.contains(it._id) }.toBooleanArray()
+
+        AlertDialog.Builder(this)
+            .setTitle("Chọn thể loại")
+            .setMultiChoiceItems(genreNames, checkedItems) { _, which, isChecked ->
+                val selectedGenre = allGenres[which]
+                if (isChecked) {
+                    if (!selectedGenreIds.contains(selectedGenre._id)) {
+                        selectedGenreIds.add(selectedGenre._id)
+                    }
+                } else {
+                    selectedGenreIds.remove(selectedGenre._id)
+                }
+            }
+            .setPositiveButton("OK") { _, _ ->
+                val selectedNames = allGenres
+                    .filter { selectedGenreIds.contains(it._id) }
+                    .map { it.name }
+                binding.edtCategory.setText(selectedNames.joinToString(", "))
+            }
+            .setNegativeButton("Hủy", null)
+            .show()
     }
 }

@@ -8,8 +8,8 @@ data class GenreListResponse(
     val metadata: List<Genre>
 )
 
-data class GenreResponse(
-    val status: String,
-    val message: String,
-    val metadata: Genre
-)
+// data class GenreResponse(
+//     val status: String,
+//     val message: String,
+//     val metadata: Genre
+// )
