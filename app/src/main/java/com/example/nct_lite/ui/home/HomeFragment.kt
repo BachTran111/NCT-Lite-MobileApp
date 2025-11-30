@@ -1,14 +1,14 @@
 package com.example.nct_lite.ui.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider
 import com.example.nct_lite.R
 import com.example.nct_lite.data.album.response.AlbumMetadata
@@ -16,18 +16,21 @@ import com.example.nct_lite.data.history.response.PlayHistoryResponse
 import com.example.nct_lite.data.song.model.Song
 import com.example.nct_lite.data.song.response.SongMetadata
 import com.example.nct_lite.databinding.FragmentHomeBinding
+import com.example.nct_lite.ui.activity.MainActivity
 import com.example.nct_lite.ui.activity.SongViewActivity
 import com.example.nct_lite.viewmodel.album.AlbumViewModel
 import com.example.nct_lite.viewmodel.history.HistoryViewModel
+import com.example.nct_lite.viewmodel.song.SongViewModelFactory
 import com.example.nct_lite.viewmodel.song.SongViewModel
+import androidx.fragment.app.activityViewModels
 import com.squareup.picasso.Picasso
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private val songViewModel: SongViewModel by activityViewModels { SongViewModelFactory(com.example.nct_lite.data.song.SongRepository()) }
 
-    private val songViewModel by lazy { ViewModelProvider(this)[SongViewModel::class.java] }
     private val albumViewModel by lazy { ViewModelProvider(this)[AlbumViewModel::class.java] }
     private val historyViewModel by lazy { ViewModelProvider(this)[HistoryViewModel::class.java] }
 
@@ -95,12 +98,7 @@ class HomeFragment : Fragment() {
             }
 
             view.setOnClickListener {
-                val artistSongs = cachedSongs.filter { it.artist == artist }
-                if (artistSongs.isNotEmpty()) {
-                    startActivity(SongViewActivity.createIntent(requireContext(), artistSongs.first()))
-                } else {
-                    showError("Không có bài cho nghệ sĩ này")
-                }
+                (activity as? MainActivity)?.openArtistPlaylist(artist)
             }
 
             container.addView(view)
@@ -125,9 +123,9 @@ class HomeFragment : Fragment() {
 
             chunk.forEach { song ->
                 val view = inflater.inflate(R.layout.item_quick_pick, target, false)
-                val titleView = view.findViewById<TextView>(R.id.text_quick_title)
-                val artistView = view.findViewById<TextView>(R.id.text_quick_artist)
-                val imageView = view.findViewById<ImageView>(R.id.image_quick_pick)
+                val titleView = view.findViewById<TextView>(R.id.tvSongTitle)
+                val artistView = view.findViewById<TextView>(R.id.tvArtist)
+                val imageView = view.findViewById<ImageView>(R.id.imgCover)
 
                 titleView.text = song.title
                 artistView.text = song.artist

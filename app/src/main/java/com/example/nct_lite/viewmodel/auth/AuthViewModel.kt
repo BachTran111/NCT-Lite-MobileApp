@@ -15,6 +15,7 @@ class AuthViewModel(private val repo: AuthRepository) : ViewModel() {
 
     val authResponse = MutableLiveData<Result<AuthResponse>>()
     val userRole = MutableLiveData<String>()
+    val username = MutableLiveData<String>()
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
@@ -34,6 +35,15 @@ class AuthViewModel(private val repo: AuthRepository) : ViewModel() {
         viewModelScope.launch {
             val result = repo.register(username, password)
             authResponse.postValue(result)
+        }
+    }
+    fun getInfor() {
+        viewModelScope.launch {
+            val result = repo.getInfor()
+            result.onSuccess {
+                userRole.postValue(it.role)
+                username.postValue(it.username)
+            }
         }
     }
 }

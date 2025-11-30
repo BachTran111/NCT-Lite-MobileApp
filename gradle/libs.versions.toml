@@ -16,6 +16,8 @@ activityKtx = "1.9.0"
 roomKtx = "2.8.4"
 mediationTestSuite = "3.0.0"
 filamentAndroid = "1.17.1"
+#///
+#fragmentKtx = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

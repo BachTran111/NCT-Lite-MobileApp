@@ -11,11 +11,14 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.nct_lite.R
+import com.example.nct_lite.data.song.SongRepository
 import com.example.nct_lite.data.song.response.SongMetadata
 import com.example.nct_lite.viewmodel.player.PlayerViewModel
+import com.example.nct_lite.viewmodel.player.PlayerViewModelFactory
 import com.example.nct_lite.viewmodel.song.SongViewModel
 import com.example.nct_lite.viewmodel.song.SongViewModelFactory
 import com.squareup.picasso.Picasso
@@ -23,8 +26,14 @@ import kotlinx.coroutines.launch
 
 class SongViewActivity : AppCompatActivity() {
 
-    private val songViewModel: SongViewModel by viewModels { SongViewModelFactory() }
-    private val playerVM: PlayerViewModel by viewModels()
+//    private val songViewModel: SongViewModel by viewModels { SongViewModelFactory(com.example.nct_lite.data.song.SongRepository()) }
+    val songRepository = SongRepository() // Or however you get your repository instance
+    val viewModelFactory = SongViewModelFactory(songRepository)
+    val songViewModel = ViewModelProvider(this, viewModelFactory).get(SongViewModel::class.java)
+
+    private val playerVM: PlayerViewModel by viewModels {
+        PlayerViewModelFactory(application)
+    }
 
     private lateinit var albumArt: ImageView
     private lateinit var albumTitle: TextView
@@ -108,7 +117,10 @@ class SongViewActivity : AppCompatActivity() {
         currentSong = song
         updateSongTexts(song.title, song.artist, song.genreIDs.map { it.name })
         loadCover(song.coverUrl)
-        playerVM.playSong(song)
+        // Chỉ phát bài hát mới nếu nó khác với bài đang phát hiện tại
+        if (playerVM.playerState.value.url != song.url) {
+            playerVM.playSong(song)
+        }
     }
 
     private fun updateSongTexts(title: String, artist: String, genres: List<String>) {

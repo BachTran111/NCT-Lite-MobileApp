@@ -1,11 +1,9 @@
 package com.example.nct_lite.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.nct_lite.R
 import com.example.nct_lite.data.song.response.SongMetadata
 import com.example.nct_lite.ui.admin.AdminEditSongFragment
+import com.example.nct_lite.ui.artist.ArtistPlaylistFragment
 import com.example.nct_lite.ui.admin.AdminManagingFragment
 import com.example.nct_lite.ui.admin.AdminPreviewFragment
 import com.example.nct_lite.ui.home.HomeFragment
@@ -24,6 +23,7 @@ import com.example.nct_lite.ui.library.LibraryFragment
 import com.example.nct_lite.ui.playlist.PlaylistReviewFragment
 import com.example.nct_lite.ui.search.SearchFragment
 import com.example.nct_lite.ui.settings.SettingsFragment
+import com.example.nct_lite.viewmodel.player.PlayerViewModelFactory
 import com.example.nct_lite.viewmodel.player.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
@@ -33,7 +33,7 @@ import com.example.nct_lite.data.SessionManager
 
 open class MainActivity : AppCompatActivity() {
 
-    private val playerVM: PlayerViewModel by viewModels()
+    private val playerVM: PlayerViewModel by viewModels { PlayerViewModelFactory(application) }
     private var userRole: String? = null
 
     private lateinit var ivCover: ImageView
@@ -194,4 +194,17 @@ open class MainActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment, tag)
             .commit()
     }
+
+    fun playSong(song: SongMetadata) {
+        playerVM.playSong(song)
+    }
+
+    fun openArtistPlaylist(artistName: String) {
+        val fragment = ArtistPlaylistFragment.newInstance(artistName)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 }

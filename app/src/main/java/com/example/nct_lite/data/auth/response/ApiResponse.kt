@@ -10,3 +10,9 @@ data class AuthResponse(
     val message: String,
     val metadata: AuthMeta
 )
+
+data class InforResponse(
+    val _id: String,
+    val username: String,
+    val role: String
+)

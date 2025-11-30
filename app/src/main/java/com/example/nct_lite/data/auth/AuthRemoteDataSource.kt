@@ -8,4 +8,5 @@ class AuthRemoteDataSource (private val api: AuthApi) {
         api.login(LoginRequest(username, password))
     suspend fun register(username: String, password: String) =
         api.register(RegisterRequest(username, password))
+    suspend fun getInfor() = api.getInfor()
 }

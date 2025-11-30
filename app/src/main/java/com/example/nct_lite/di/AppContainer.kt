@@ -16,10 +16,10 @@ class AppContainer (context: Context) {
         "app_db"
     ).build()
 
-    private val localDataSource = AuthLocalDataSource(db.userDao())
+//    private val localDataSource = AuthLocalDataSource(db.userDao())
     private val remoteDataSource = AuthRemoteDataSource(ApiClient.authApi)
 
-    val authRepository = AuthRepository(localDataSource, remoteDataSource)
+    val authRepository = AuthRepository(remoteDataSource)
 
     // USER DOMAIN
 //    private val userRemote = UserRemoteDataSource(retrofit)
