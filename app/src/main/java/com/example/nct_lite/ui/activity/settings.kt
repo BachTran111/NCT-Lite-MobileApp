@@ -6,7 +6,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nct_lite.R
-import com.example.nct_lite.ui.library.LibraryFragment
+import com.example.nct_lite.ui.fragment.LibraryFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SettingsActivity : AppCompatActivity() {

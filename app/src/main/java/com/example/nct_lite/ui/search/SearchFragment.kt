@@ -26,7 +26,7 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
 //    private val songViewModel by lazy { ViewModelProvider(this)[SongViewModel::class.java] }
-private val songViewModel: SongViewModel by viewModels { SongViewModelFactory() }
+    private val songViewModel: SongViewModel by viewModels { SongViewModelFactory() }
     private var cachedSongs: List<SongMetadata> = emptyList()
 
     override fun onCreateView(

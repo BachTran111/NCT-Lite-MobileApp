@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.nct_lite.data.SessionManager
 import androidx.fragment.app.activityViewModels
-import com.example.nct_lite.viewmodel.album.AlbumViewModelFactory
+import com.example.nct_lite.data.SessionManager
+import com.example.nct_lite.data.album.request.AlbumCreateRequest
+import com.example.nct_lite.data.album.response.AlbumResponse
 import com.example.nct_lite.databinding.BottomSheetNewPlaylistBinding
 import com.example.nct_lite.viewmodel.album.AlbumViewModel
+import com.example.nct_lite.viewmodel.album.AlbumViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
+
 
 class NewPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -47,57 +47,42 @@ class NewPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
                 return@setOnClickListener
             }
 
-            // Vô hiệu hóa nút để tránh click nhiều lần
-            binding.btnCreate.isEnabled = false
-
-            // Chuyển đổi String thành RequestBody
-            val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
-            val descriptionBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
-
-            // Cung cấp các giá trị mặc định cho các trường khác
-            val artistBody = "".toRequestBody("text/plain".toMediaTypeOrNull())
-            val genreIDsBody = "[]".toRequestBody("application/json".toMediaTypeOrNull())
-            val songIDsBody = "[]".toRequestBody("application/json".toMediaTypeOrNull())
-            val isPublicBody = "true".toRequestBody("text/plain".toMediaTypeOrNull())
-
-            // Tạo một MultipartBody.Part rỗng cho ảnh bìa
-            val emptyBody = "".toRequestBody("image/jpeg".toMediaTypeOrNull())
-            val coverPart = MultipartBody.Part.createFormData("cover", "empty.jpg", emptyBody) // API của bạn có thể không cần cái này
-
             val token = SessionManager.getToken(requireContext())
             if (token.isNullOrEmpty()) {
                 Toast.makeText(requireContext(), "Lỗi xác thực, vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show()
-                binding.btnCreate.isEnabled = true
                 return@setOnClickListener
             }
 
+            binding.btnCreate.isEnabled = false
+            val albumCreateRequest = AlbumCreateRequest(
+                title = title,
+                description = if (description.isNotEmpty()) description else null,
+            )
+
             albumViewModel.createAlbum(
-                "Bearer $token",
-                titleBody, artistBody, genreIDsBody, descriptionBody, isPublicBody, songIDsBody,
-                null // Truyền null cho ảnh bìa để tránh lỗi 500
+                albumCreateRequest
             )
         }
 
-        // Lắng nghe kết quả từ ViewModel
         albumViewModel.createAlbumResult.observe(viewLifecycleOwner) { result ->
-            result?.onSuccess {
-                Toast.makeText(requireContext(), "Tạo playlist thành công!", Toast.LENGTH_SHORT).show()
-                // Tải lại danh sách album sau khi tạo thành công
-                val token = SessionManager.getToken(requireContext())
-                if (!token.isNullOrEmpty()) {
-                    albumViewModel.getAllAlbums()
-                }
+            if (result == null) return@observe
+            result.onSuccess { response ->
+                Toast.makeText(requireContext(), "Tạo playlist '${response.status}' thành công!", Toast.LENGTH_SHORT).show()
                 dismiss()
-            }?.onFailure {
-                Toast.makeText(requireContext(), "Tạo playlist thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
+            }.onFailure { error ->
+                Toast.makeText(requireContext(), "Tạo playlist thất bại: ${error.message}", Toast.LENGTH_LONG).show()
             }
-            binding.btnCreate.isEnabled = true // Kích hoạt lại nút
+            // Kích hoạt lại nút dù thành công hay thất bại
+            binding.btnCreate.isEnabled = true
         }
+    }
+    fun setupListeners(){
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        albumViewModel.createAlbumResult.postValue(null) // Dọn dẹp LiveData
+        albumViewModel.createAlbumResult.postValue(null) // Dọn dẹp LiveData để tránh trigger lại
         _binding = null
     }
 }

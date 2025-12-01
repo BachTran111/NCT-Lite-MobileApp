@@ -1,7 +1,6 @@
 package com.example.nct_lite.data.album
 
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import com.example.nct_lite.data.album.request.AlbumCreateRequest
 
 class AlbumRemoteDataSource(private val albumApi: AlbumApi) {
 
@@ -9,26 +8,12 @@ class AlbumRemoteDataSource(private val albumApi: AlbumApi) {
 
     suspend fun getAlbumById(id: String) = albumApi.getAlbumById(id)
 
-    // Trong Repository của bạn
     suspend fun createAlbum(
-        token: String,
-        title: RequestBody,
-        artist: RequestBody,
-        genreIDs: RequestBody,
-        description: RequestBody,
-        isPublic: RequestBody,
-        songIDs: RequestBody,
-        cover: MultipartBody.Part?
+        albumCreateRequest: AlbumCreateRequest
     ) = albumApi.createAlbum(
-        token = token,
-        title = title,
-        artist = artist,
-        description = description,
-        isPublic = isPublic,
-        genreIDs = genreIDs, // Đã thêm vào
-        songIDs = songIDs,
-        cover = cover
+        albumCreateRequest = albumCreateRequest
     )
+    suspend fun getMyOwnAlbum() = albumApi.getMyOwnALbum()
     suspend fun addSongToAlbum(albumId: String, songId: String) =
         albumApi.addSongToAlbum(albumId, songId)
     suspend fun removeSongFromAlbum(albumId: String, songId: String) =

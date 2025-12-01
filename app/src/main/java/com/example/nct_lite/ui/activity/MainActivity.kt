@@ -20,7 +20,7 @@ import com.example.nct_lite.ui.admin.AdminEditSongFragment
 import com.example.nct_lite.ui.admin.AdminManagingFragment
 import com.example.nct_lite.ui.admin.AdminPreviewFragment
 import com.example.nct_lite.ui.home.HomeFragment
-import com.example.nct_lite.ui.library.LibraryFragment
+import com.example.nct_lite.ui.fragment.LibraryFragment
 import com.example.nct_lite.ui.playlist.PlaylistReviewFragment
 import com.example.nct_lite.ui.search.SearchFragment
 import com.example.nct_lite.ui.settings.SettingsFragment

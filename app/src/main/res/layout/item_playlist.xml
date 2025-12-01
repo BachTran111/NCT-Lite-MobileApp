@@ -20,7 +20,6 @@
         android:background="@drawable/ic_avatar_background"
         android:clipToOutline="true" />
 
-    <!-- Tên playlist -->
     <TextView
         android:id="@+id/playlist_name"
         android:layout_width="0dp"
@@ -30,9 +29,10 @@
         android:text="Playlist Name"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
-    <!-- Mũi tên -->
     <ImageView
         android:id="@+id/arrow_icon"
         android:layout_width="20dp"

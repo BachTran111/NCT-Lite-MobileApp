@@ -58,15 +58,7 @@ class UserUploadMusicActivity : AppCompatActivity() {
         observeGenres()
         genreViewModel.getGenres()
 
-//        binding.btnBack.setOnClickListener { finish() }
-//        binding.btnClear.setOnClickListener { clearFields() }
-//        binding.btnPickAudio.setOnClickListener { audioPicker.launch("audio/*") }
-//        binding.btnPickCover.setOnClickListener { imagePicker.launch("image/*") }
-//        binding.btnUpload.setOnClickListener { uploadSong() }
-//        binding.btnPickCover.setOnLongClickListener {
-//            clearFields()
-//            true
-//        }
+
     }
 
     private fun setupListeners() {
