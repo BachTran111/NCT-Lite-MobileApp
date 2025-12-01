@@ -105,4 +105,35 @@ class SongRepository(
             Result.failure(e)
         }
     }
+    suspend fun likeSong(id: String): Result<Unit> {
+        return try {
+            val res = remote.likeSong(id)
+            if (res.isSuccessful)
+                Result.success(Unit)
+            else
+                Result.failure(Exception(res.errorBody()?.string() ?: "Like failed"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    suspend fun getMySongs(): Result<SongListResponse> {
+        return try {
+            val res = remote.getMySongs()
+            if (res.isSuccessful && res.body() != null)
+                Result.success(res.body()!!)
+            else
+                Result.failure(Exception(res.errorBody()?.string() ?: "Failed to load my songs"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    companion object {
+        private var instance: SongRepository? = null
+        fun getInstance(): SongRepository {
+            if (instance == null) {
+                instance = SongRepository()
+            }
+            return instance!!
+        }
+    }
 }

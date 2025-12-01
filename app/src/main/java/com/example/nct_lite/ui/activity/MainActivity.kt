@@ -29,6 +29,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import com.example.nct_lite.data.SessionManager
+import com.example.nct_lite.ui.artist.ArtistPlaylistFragment
 
 
 open class MainActivity : AppCompatActivity() {
@@ -192,6 +193,13 @@ open class MainActivity : AppCompatActivity() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment, tag)
+            .commit()
+    }
+    fun openArtistPlaylist(artistName: String) {
+        val fragment = ArtistPlaylistFragment.newInstance(artistName)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
             .commit()
     }
 }

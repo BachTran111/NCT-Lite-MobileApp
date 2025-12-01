@@ -22,17 +22,17 @@ class GenreRepository(
         }
     }
 
-    suspend fun getGenreById(id: String): Result<GenreResponse> {
-        return try {
-            val res = remote.getGenreById(id)
-
-            if (res.isSuccessful && res.body() != null)
-                Result.success(res.body()!!)
-            else
-                Result.failure(Exception("Failed to load genre $id"))
-
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+//    suspend fun getGenreById(id: String): Result<GenreResponse> {
+//        return try {
+//            val res = remote.getGenreById(id)
+//
+//            if (res.isSuccessful && res.body() != null)
+//                Result.success(res.body()!!)
+//            else
+//                Result.failure(Exception("Failed to load genre $id"))
+//
+//        } catch (e: Exception) {
+//            Result.failure(e)
+//        }
+//    }
 }

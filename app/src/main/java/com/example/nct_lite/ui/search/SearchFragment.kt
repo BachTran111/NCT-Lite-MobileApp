@@ -10,20 +10,23 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.nct_lite.R
+import com.example.nct_lite.data.song.SongRepository
 import com.example.nct_lite.data.song.response.SongMetadata
 import com.example.nct_lite.databinding.FragmentSearchBinding
 import com.example.nct_lite.ui.activity.SongViewActivity
 import com.example.nct_lite.viewmodel.song.SongViewModel
+import com.example.nct_lite.viewmodel.song.SongViewModelFactory
 
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val songViewModel by lazy { ViewModelProvider(this)[SongViewModel::class.java] }
-
+//    private val songViewModel by lazy { ViewModelProvider(this)[SongViewModel::class.java] }
+private val songViewModel: SongViewModel by viewModels { SongViewModelFactory() }
     private var cachedSongs: List<SongMetadata> = emptyList()
 
     override fun onCreateView(
@@ -70,11 +73,11 @@ class SearchFragment : Fragment() {
         }
 
         songViewModel.searchResult.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { response ->
+            result?.onSuccess { response ->
                 binding.textSearchResults.visibility = View.VISIBLE
                 renderSongList(binding.containerSearchResults, response.metadata)
             }
-            result.onFailure {
+            result?.onFailure {
                 Toast.makeText(requireContext(), "Không tìm thấy bài hát phù hợp", Toast.LENGTH_SHORT).show()
             }
         }

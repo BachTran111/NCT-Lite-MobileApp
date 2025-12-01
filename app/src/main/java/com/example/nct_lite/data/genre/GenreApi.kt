@@ -11,8 +11,8 @@ interface   GenreApi {
     @GET("genres")
     suspend fun getGenres(): Response<GenreListResponse>
 
-    @GET("genres/{id}")
-    suspend fun getGenreById(
-        @Path("id") id: String
-    ): Response<GenreResponse>
+//    @GET("genres/{id}")
+//    suspend fun getGenreById(
+//        @Path("id") id: String
+//    ): Response<GenreResponse>
 }

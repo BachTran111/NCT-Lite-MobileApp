@@ -41,6 +41,9 @@ interface SongApi {
         @Part cover: MultipartBody.Part
     ): Response<SongResponse>
 
+    @GET("songs/me")
+    suspend fun getMySongs(): Response<SongListResponse>
+
     @GET("songs/pending")
     suspend fun getPendingSongs(): Response<SongListResponse>
 
@@ -53,4 +56,9 @@ interface SongApi {
     suspend fun rejectSong(
         @Path("id") id: String
     ): Response<SongResponse>
+
+    @POST("songs/{id}/like")
+    suspend fun likeSong(
+        @Path("id") id: String
+    ): Response<Unit>
 }

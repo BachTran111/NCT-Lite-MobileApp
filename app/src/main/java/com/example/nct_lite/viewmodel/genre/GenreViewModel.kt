@@ -21,9 +21,9 @@ class GenreViewModel(
         }
     }
 
-    fun getGenreById(id: String) {
-        viewModelScope.launch {
-            genreDetail.postValue(repo.getGenreById(id))
-        }
-    }
+//    fun getGenreById(id: String) {
+//        viewModelScope.launch {
+//            genreDetail.postValue(repo.getGenreById(id))
+//        }
+//    }
 }
