@@ -19,7 +19,7 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<View>(R.id.btn_new_playlist)?.setOnClickListener {
-            NewPlaylistBottomSheetFragment().show(parentFragmentManager, "NewPlaylistBottomSheet")
+            NewPlaylistBottomSheet().show(parentFragmentManager, "NewPlaylistBottomSheet")
         }
         view.findViewById<View>(R.id.btn_done)?.setOnClickListener {
             dismiss()

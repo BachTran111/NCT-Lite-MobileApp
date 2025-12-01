@@ -20,6 +20,10 @@ import com.example.nct_lite.ui.admin.AdminManagingFragment
 import com.example.nct_lite.ui.admin.AdminPreviewFragment
 import com.example.nct_lite.ui.home.HomeFragment
 import com.example.nct_lite.ui.library.LibraryFragment
+import com.example.nct_lite.ui.fragment.AddToPlaylistBottomSheetFragment
+import com.example.nct_lite.ui.fragment.NewPlaylistBottomSheet
+//import com.example.nct_lite.ui.playlist.SongOptionsBottomSheet
+import com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment
 import com.example.nct_lite.ui.playlist.PlaylistReviewFragment
 import com.example.nct_lite.ui.search.SearchFragment
 import com.example.nct_lite.ui.settings.SettingsFragment
@@ -207,4 +211,21 @@ open class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    fun showSongOptions(song: SongMetadata) {
+        val bottomSheet = BottomSheetSelectedFragment.newInstance(song)
+        bottomSheet.show(supportFragmentManager, "SongOptionsSheet")
+    }
+
+    fun showAddToPlaylist(songId: String) {
+        // Giả sử bạn có một BottomSheet để thêm vào playlist
+        // val bottomSheet = AddToPlaylistBottomSheet.newInstance(songId)
+        // bottomSheet.show(supportFragmentManager, "AddToPlaylistSheet")
+        // Vì chưa có, ta sẽ mở thẳng NewPlaylist
+        showNewPlaylistSheet()
+    }
+
+    fun showNewPlaylistSheet() {
+        NewPlaylistBottomSheet().show(supportFragmentManager, "NewPlaylistSheet")
+    }
 }
+

@@ -61,9 +61,13 @@ class ArtistPlaylistFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        songAdapter = QuickPickAdapter(emptyList()) { song ->
-            (activity as? MainActivity)?.playSong(song)
-        }
+        songAdapter = QuickPickAdapter(
+            songs = emptyList(),
+            onSongClicked = { song -> (activity as? MainActivity)?.playSong(song) },
+            onMoreClicked = { song ->
+                (activity as? MainActivity)?.showSongOptions(song)
+            }
+        )
         binding.rvSongs.apply {
             adapter = songAdapter
             layoutManager = LinearLayoutManager(context)

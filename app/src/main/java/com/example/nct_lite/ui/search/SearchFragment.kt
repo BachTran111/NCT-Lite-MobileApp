@@ -16,6 +16,7 @@ import com.example.nct_lite.R
 import com.example.nct_lite.data.song.SongRepository
 import com.example.nct_lite.data.song.response.SongMetadata
 import com.example.nct_lite.databinding.FragmentSearchBinding
+import com.example.nct_lite.ui.activity.MainActivity
 import com.example.nct_lite.ui.activity.SongViewActivity
 import com.example.nct_lite.viewmodel.song.SongViewModel
 import com.example.nct_lite.viewmodel.song.SongViewModelFactory
@@ -26,10 +27,7 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-//    private val songViewModel by lazy { ViewModelProvider(this)[SongViewModel::class.java] }
-//val songRepository = SongRepository() // Or however you get your repository instance
-//    val viewModelFactory = SongViewModelFactory(songRepository)
-//    val songViewModel = ViewModelProvider(this, viewModelFactory).get(SongViewModel::class.java)
+
 private val songViewModel: SongViewModel by activityViewModels { SongViewModelFactory(com.example.nct_lite.data.song.SongRepository()) }
 
     private var cachedSongs: List<SongMetadata> = emptyList()
@@ -51,16 +49,13 @@ private val songViewModel: SongViewModel by activityViewModels { SongViewModelFa
         binding.editSearch.doAfterTextChanged { text ->
             val keyword = text?.toString().orEmpty().trim()
             if (keyword.length < 2) {
-                //                binding.textSearchResults.visibility = View.GONE
-//                binding.containerSearchResults.removeAllViews()
                 binding.textSearchResults.visibility = View.GONE
-
-                // ⬅️ Lúc này mới render suggestion
                 renderSongList(binding.containerSearchSuggestions, cachedSongs.take(6))
 
                 binding.containerSearchResults.removeAllViews()
             } else {
                 songViewModel.search(keyword)
+                
 
             }
         }
@@ -116,7 +111,8 @@ private val songViewModel: SongViewModel by activityViewModels { SongViewModelFa
             }
 
             moreBtn.setOnClickListener {
-                com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment().show(parentFragmentManager, "BottomSheetSelected")
+                // Gọi hàm trong MainActivity để hiển thị các tùy chọn cho bài hát
+                (activity as? MainActivity)?.showSongOptions(song)
             }
 
             container.addView(view)

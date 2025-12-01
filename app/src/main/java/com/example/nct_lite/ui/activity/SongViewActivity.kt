@@ -26,14 +26,8 @@ import kotlinx.coroutines.launch
 
 class SongViewActivity : AppCompatActivity() {
 
-//    private val songViewModel: SongViewModel by viewModels { SongViewModelFactory(com.example.nct_lite.data.song.SongRepository()) }
-    val songRepository = SongRepository() // Or however you get your repository instance
-    val viewModelFactory = SongViewModelFactory(songRepository)
-    val songViewModel = ViewModelProvider(this, viewModelFactory).get(SongViewModel::class.java)
-
-    private val playerVM: PlayerViewModel by viewModels {
-        PlayerViewModelFactory(application)
-    }
+    private val songViewModel: SongViewModel by viewModels { SongViewModelFactory(SongRepository()) }
+    private val playerVM: PlayerViewModel by viewModels { PlayerViewModelFactory(application) }
 
     private lateinit var albumArt: ImageView
     private lateinit var albumTitle: TextView

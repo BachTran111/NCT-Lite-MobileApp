@@ -1,5 +1,8 @@
 package com.example.nct_lite.data.album.request
 
+import java.io.Serializable
+
+
 data class AlbumUpdateRequest(
     val title: String? = null,
     val artist: String? = null,
@@ -9,4 +12,4 @@ data class AlbumUpdateRequest(
     val releaseDate: String? = null,
     val description: String? = null,
     val isPublic: Boolean? = null
-)
+): Serializable

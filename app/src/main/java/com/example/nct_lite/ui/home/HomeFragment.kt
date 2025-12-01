@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.nct_lite.R
 import com.example.nct_lite.data.album.response.AlbumMetadata
 import com.example.nct_lite.data.history.response.PlayHistoryResponse
@@ -23,7 +25,12 @@ import com.example.nct_lite.viewmodel.history.HistoryViewModel
 import com.example.nct_lite.viewmodel.song.SongViewModelFactory
 import com.example.nct_lite.viewmodel.song.SongViewModel
 import androidx.fragment.app.activityViewModels
+import com.example.nct_lite.data.SessionManager
 import com.squareup.picasso.Picasso
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 
@@ -34,7 +41,8 @@ class HomeFragment : Fragment() {
     private val albumViewModel by lazy { ViewModelProvider(this)[AlbumViewModel::class.java] }
     private val historyViewModel by lazy { ViewModelProvider(this)[HistoryViewModel::class.java] }
 
-    private var cachedSongs: List<SongMetadata> = emptyList()
+    private lateinit var artistAdapter: ArtistAdapter
+    private lateinit var albumAdapter: AlbumAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,18 +55,59 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRecyclerViews()
         observeData()
         songViewModel.loadAllSongs()
         historyViewModel.getHistory()
-        albumViewModel.getAllAlbums()
+        val token = SessionManager.getToken(requireContext())
+        if (!token.isNullOrEmpty()) {
+            albumViewModel.getAllAlbums()
+        }
+    }
+
+    private fun setupRecyclerViews() {
+        // Artist Adapter
+        artistAdapter = ArtistAdapter { artistName ->
+            (activity as? MainActivity)?.openArtistPlaylist(artistName)
+        }
+        (binding.containerArtists as? RecyclerView)?.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = artistAdapter
+        }
+
+        // Album Adapter
+        albumAdapter = AlbumAdapter { album ->
+            // Handle album click if needed, e.g., open album details
+        }
+        (binding.containerBestAlbums as? RecyclerView)?.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = albumAdapter
+        }
     }
 
     private fun observeData() {
         songViewModel.songs.observe(viewLifecycleOwner) { result ->
             result.onSuccess { response ->
-                cachedSongs = response.metadata
-                populateQuickPickSongs(response.metadata)
-                populateArtists(response.metadata)
+                // FIX 1: Giới hạn số lượng bài hát hiển thị Quick Pick (ví dụ: 12 bài)
+                // Nếu không, nó sẽ inflate hàng trăm view và gây lag
+                val limitedSongs = response.metadata.take(12)
+                populateQuickPickSongs(limitedSongs)
+
+                // Phần xử lý Artist này bạn làm RẤT TỐT (đã đẩy sang Default thread)
+                lifecycleScope.launch {
+                    val uniqueArtists = withContext(Dispatchers.Default) {
+                        response.metadata
+                            .filter { !it.artist.isNullOrBlank() } // Safety check
+                            .distinctBy { it.artist }
+                            .map { song ->
+                                ArtistAdapter.ArtistData(
+                                    name = song.artist,
+                                    coverUrl = song.coverUrl
+                                )
+                            }
+                    }
+                    artistAdapter.submitList(uniqueArtists)
+                }
             }
             result.onFailure { e -> showError("Error loading songs: ${e.message}") }
         }
@@ -69,83 +118,59 @@ class HomeFragment : Fragment() {
         }
 
         albumViewModel.albums.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { response -> populateBestAlbums(response.metadata) }
+            result.onSuccess { response ->
+                albumAdapter.submitList(response.metadata)
+            }
             result.onFailure { e -> showError("Error loading albums: ${e.message}") }
         }
     }
 
-    private fun populateArtists(songs: List<SongMetadata>) {
-        val context = requireContext()
-        val inflater = LayoutInflater.from(context)
-        val container = binding.containerArtists
-        container.removeAllViews()
-
-        val uniqueArtists = songs.map { it.artist }.distinct()
-        uniqueArtists.forEach { artist ->
-            val view = inflater.inflate(R.layout.item_artist, container, false)
-            val nameView = view.findViewById<TextView>(R.id.text_artist_name)
-            val imageView = view.findViewById<ImageView>(R.id.image_artist)
-
-            nameView.text = artist
-            val cover = songs.firstOrNull { it.artist == artist }?.coverUrl
-            if (!cover.isNullOrEmpty()) {
-                Picasso.get()
-                    .load(cover)
-                    .placeholder(R.drawable.placeholder_artist)
-                    .into(imageView)
-            } else {
-                imageView.setImageResource(R.drawable.placeholder_artist)
-            }
-
-            view.setOnClickListener {
-                (activity as? MainActivity)?.openArtistPlaylist(artist)
-            }
-
-            container.addView(view)
-        }
-    }
-
     private fun populateQuickPickSongs(songs: List<SongMetadata>) {
-        val context = requireContext()
+        val context = context ?: return // Safe check context
         val inflater = LayoutInflater.from(context)
         val row1 = binding.containerQuickPickRow1
         val row2 = binding.containerQuickPickRow2
         val row3 = binding.containerQuickPickRow3
 
-        listOf(row1, row2, row3).forEach { it.removeAllViews() }
+        // Xóa view cũ để tránh bị duplicate khi data update
+        listOf(row1, row2, row3).forEach { it?.removeAllViews() }
 
+        // Logic chia hàng
         songs.chunked(3).forEachIndexed { index, chunk ->
             val target = when (index) {
                 0 -> row1
                 1 -> row2
-                else -> row3
+                2 -> row3
+                else -> null // FIX 2: Bỏ qua các hàng thừa, chỉ fill 3 hàng đầu
             }
 
-            chunk.forEach { song ->
-                val view = inflater.inflate(R.layout.item_quick_pick, target, false)
-                val titleView = view.findViewById<TextView>(R.id.tvSongTitle)
-                val artistView = view.findViewById<TextView>(R.id.tvArtist)
-                val imageView = view.findViewById<ImageView>(R.id.imgCover)
+            // Nếu target khác null thì mới add view
+            target?.let { layout ->
+                chunk.forEach { song ->
+                    val view = inflater.inflate(R.layout.item_quick_pick, layout, false)
+                    val titleView = view.findViewById<TextView>(R.id.tvSongTitle)
+                    val artistView = view.findViewById<TextView>(R.id.tvArtist)
+                    val imageView = view.findViewById<ImageView>(R.id.imgCover)
 
-                titleView.text = song.title
-                artistView.text = song.artist
-                if (!song.coverUrl.isNullOrEmpty()) {
-                    Picasso.get()
-                        .load(song.coverUrl)
-                        .placeholder(R.drawable.placeholder_quick)
-                        .into(imageView)
-                } else {
-                    imageView.setImageResource(R.drawable.placeholder_quick)
+                    titleView.text = song.title
+                    artistView.text = song.artist
+                    if (!song.coverUrl.isNullOrEmpty()) {
+                        Picasso.get()
+                            .load(song.coverUrl)
+                            .placeholder(R.drawable.placeholder_quick)
+                            .into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.placeholder_quick)
+                    }
+
+                    view.setOnClickListener {
+                        startActivity(SongViewActivity.createIntent(requireContext(), song))
+                    }
+
+                    layout.addView(view)
                 }
-
-                view.setOnClickListener {
-                    startActivity(SongViewActivity.createIntent(requireContext(), song))
-                }
-
-                target.addView(view)
             }
-        }
-    }
+        }}
 
     private fun populateFavoriteSongs(response: PlayHistoryResponse) {
         val context = requireContext()
@@ -181,35 +206,10 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private fun populateBestAlbums(albums: List<AlbumMetadata>) {
-        val context = requireContext()
-        val inflater = LayoutInflater.from(context)
-        val container = binding.containerBestAlbums
-        container.removeAllViews()
-
-        albums.forEach { album ->
-            val view = inflater.inflate(R.layout.item_album, container, false)
-            val imageView = view.findViewById<ImageView>(R.id.image_album)
-            val titleView = view.findViewById<TextView>(R.id.text_album_title)
-            val artistView = view.findViewById<TextView>(R.id.text_album_artist)
-
-            titleView.text = album.title
-            artistView.text = album.artist
-            if (!album.coverUrl.isNullOrEmpty()) {
-                Picasso.get()
-                    .load(album.coverUrl)
-                    .placeholder(R.drawable.placeholder_album)
-                    .into(imageView)
-            } else {
-                imageView.setImageResource(R.drawable.placeholder_album)
-            }
-
-            container.addView(view)
-        }
-    }
-
     private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        if (isAdded && context != null) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {
