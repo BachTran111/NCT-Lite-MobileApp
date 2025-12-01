@@ -66,11 +66,22 @@ class ArtistPlaylistFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        songAdapter = QuickPickAdapter(emptyList()) { song ->
-//            (activity as? MainActivity)?.playSong(song)
-            val intent = SongViewActivity.createIntent(requireContext(), song)
-            startActivity(intent)
-        }
+        songAdapter = QuickPickAdapter(
+            songs = emptyList(), // Tham số 1: List bài hát
+
+            // Tham số 2: Xử lý click vào bài hát
+            onSongClicked = { song ->
+                val intent = SongViewActivity.createIntent(requireContext(), song)
+                startActivity(intent)
+            },
+
+            // Tham số 3: Xử lý click nút 3 chấm (More)
+            onMoreClicked = { song ->
+                // Hiện BottomSheet tùy chọn
+                (activity as? MainActivity)?.showSongOptions(song)
+            }
+        )
+
         binding.rvSongs.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = songAdapter

@@ -3,6 +3,8 @@ package com.example.nct_lite.data.album
 import com.example.nct_lite.data.ApiClient
 import com.example.nct_lite.data.album.response.AlbumListResponse
 import com.example.nct_lite.data.album.response.AlbumResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class AlbumRepository(
     private val remote: AlbumRemoteDataSource = AlbumRemoteDataSource(ApiClient.albumApi)
@@ -30,6 +32,41 @@ class AlbumRepository(
             else
                 Result.failure(Exception("Failed to load album $id"))
 
+        } catch (e: Exception) {
+            Result.failure(e)
+//            val errorMsg = res.errorBody()?.string() ?: "Failed to load album $id: ${res.code()}"
+//            Result.failure(Exception(errorMsg))
+        }
+    }
+
+    suspend fun createAlbum(
+        token: String,
+        title: RequestBody,
+        artist: RequestBody,
+        genreIDs: RequestBody,
+        description: RequestBody,
+        isPublic: RequestBody,
+        songIDs: RequestBody,
+        cover: MultipartBody.Part?
+    ): Result<AlbumResponse> {
+        return try {
+            val res = remote.createAlbum(
+                token = token,
+                title = title,
+                artist = artist,
+                genreIDs = genreIDs,
+                description = description,
+                isPublic = isPublic,
+                songIDs = songIDs,
+                cover = cover
+            )
+
+            if (res.isSuccessful && res.body() != null) {
+                Result.success(res.body()!!)
+            } else {
+                val errorMsg = res.errorBody()?.string() ?: "Upload failed: ${res.code()}"
+                Result.failure(Exception(errorMsg))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }

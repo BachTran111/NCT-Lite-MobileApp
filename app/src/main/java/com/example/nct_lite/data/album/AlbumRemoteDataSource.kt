@@ -1,14 +1,39 @@
 package com.example.nct_lite.data.album
-class AlbumRemoteDataSource(private val api: AlbumApi) {
 
-    suspend fun getAlbums() = api.getAlbums()
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
-    suspend fun getAlbumById(id: String) = api.getAlbumById(id)
+class AlbumRemoteDataSource(private val albumApi: AlbumApi) {
+
+    suspend fun getAlbums() = albumApi.getAlbums()
+
+    suspend fun getAlbumById(id: String) = albumApi.getAlbumById(id)
+
+    // Trong Repository của bạn
+    suspend fun createAlbum(
+        token: String,
+        title: RequestBody,
+        artist: RequestBody,
+        genreIDs: RequestBody,
+        description: RequestBody,
+        isPublic: RequestBody,
+        songIDs: RequestBody,
+        cover: MultipartBody.Part?
+    ) = albumApi.createAlbum(
+        token = token,
+        title = title,
+        artist = artist,
+        description = description,
+        isPublic = isPublic,
+        genreIDs = genreIDs, // Đã thêm vào
+        songIDs = songIDs,
+        cover = cover
+    )
     suspend fun addSongToAlbum(albumId: String, songId: String) =
-        api.addSongToAlbum(albumId, songId)
+        albumApi.addSongToAlbum(albumId, songId)
     suspend fun removeSongFromAlbum(albumId: String, songId: String) =
-        api.removeSongFromAlbum(albumId, songId)
-    suspend fun saveAlbum(albumId: String) = api.saveAlbum(albumId)
-    suspend fun unsaveAlbum(albumId: String) = api.unsaveAlbum(albumId)
-    suspend fun getSavedAlbums() = api.getSavedAlbums()
+        albumApi.removeSongFromAlbum(albumId, songId)
+    suspend fun saveAlbum(albumId: String) = albumApi.saveAlbum(albumId)
+    suspend fun unsaveAlbum(albumId: String) = albumApi.unsaveAlbum(albumId)
+    suspend fun getSavedAlbums() = albumApi.getSavedAlbums()
 }

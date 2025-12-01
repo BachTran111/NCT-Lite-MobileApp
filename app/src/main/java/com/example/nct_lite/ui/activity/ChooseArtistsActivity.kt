@@ -90,16 +90,16 @@ class ChooseArtistsActivity : AppCompatActivity() {
     private fun renderArtists(artists: List<Genre>) {
         artistGrid.removeAllViews()
 
-        val inflater = layoutInflater
-        artists.forEach { artist ->
-            val view = inflater.inflate(R.layout.item_artist_choice, artistGrid, false)
-            val nameView = view.findViewById<TextView>(R.id.tvArtistName)
-            val avatar = view.findViewById<ImageView>(R.id.imgArtist)
-
-            nameView.text = artist.name
-            avatar.setImageResource(R.drawable.sample_artist)
-
-            artistGrid.addView(view)
-        }
+//        val inflater = layoutInflater
+//        artists.forEach { artist ->
+//            val view = inflater.inflate(R.layout.item_artist_choice, artistGrid, false)
+//            val nameView = view.findViewById<TextView>(R.id.tvArtistName)
+//            val avatar = view.findViewById<ImageView>(R.id.imgArtist)
+//
+//            nameView.text = artist.name
+//            avatar.setImageResource(R.drawable.sample_artist)
+//
+//            artistGrid.addView(view)
+//        }
     }
 }

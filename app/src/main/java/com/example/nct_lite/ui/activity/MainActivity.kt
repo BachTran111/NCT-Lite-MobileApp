@@ -30,6 +30,9 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import com.example.nct_lite.data.SessionManager
 import com.example.nct_lite.ui.artist.ArtistPlaylistFragment
+import com.example.nct_lite.ui.fragment.AddToPlaylistBottomSheetFragment
+import com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment
+import com.example.nct_lite.ui.fragment.NewPlaylistBottomSheetFragment
 
 
 open class MainActivity : AppCompatActivity() {
@@ -201,5 +204,22 @@ open class MainActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
             .commit()
+    }
+    fun showSongOptions(song: SongMetadata) {
+        val bottomSheet = BottomSheetSelectedFragment.newInstance(song)
+        bottomSheet.show(supportFragmentManager, "SongOptionsSheet")
+    }
+
+    fun showAddToPlaylist() {
+        // Giả sử bạn có một BottomSheet để thêm vào playlist
+        // val bottomSheet = AddToPlaylistBottomSheet.newInstance(songId)
+        // bottomSheet.show(supportFragmentManager, "AddToPlaylistSheet")
+        // Vì chưa có, ta sẽ mở thẳng NewPlaylist
+//        showNewPlaylistSheet()
+        AddToPlaylistBottomSheetFragment().show(supportFragmentManager, "AddToPlaylistSheet")
+    }
+
+    fun showNewPlaylistSheet() {
+        NewPlaylistBottomSheetFragment().show(supportFragmentManager, "NewPlaylistSheet")
     }
 }

@@ -2,17 +2,36 @@ package com.example.nct_lite.data.album
 
 import com.example.nct_lite.data.album.response.AlbumListResponse
 import com.example.nct_lite.data.album.response.AlbumResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface AlbumApi {
-
+//    {{BASE_URL}}/api/albums/
     @GET("albums")
     suspend fun getAlbums(): Response<AlbumListResponse>
+
+    @Multipart
+    @POST("albums")
+    suspend fun createAlbum(
+        @Header("Authorization") token: String,
+        @Part("title") title: RequestBody,
+        @Part("artist") artist: RequestBody? = null,
+        @Part("description") description: RequestBody? = null,
+        @Part("isPublic") isPublic: RequestBody? = null,
+        @Part("releaseDate") releaseDate: RequestBody? = null,
+        @Part("genreIDs") genreIDs: RequestBody? = null,
+        @Part("songIDs") songIDs: RequestBody? = null,
+        @Part cover: MultipartBody.Part? = null
+    ): Response<AlbumResponse>
 
     @GET("albums/{id}")
     suspend fun getAlbumById(

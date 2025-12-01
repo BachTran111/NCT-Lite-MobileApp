@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.nct_lite.R
 import com.example.nct_lite.data.album.response.AlbumMetadata
 import com.example.nct_lite.databinding.FragmentLibraryBinding
-import com.example.nct_lite.databinding.UserLibraryBinding
 import com.example.nct_lite.ui.activity.MainActivity
 import com.example.nct_lite.viewmodel.album.AlbumViewModel
 import com.example.nct_lite.viewmodel.genre.GenreViewModel
