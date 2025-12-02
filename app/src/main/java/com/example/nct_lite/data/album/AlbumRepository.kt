@@ -2,8 +2,10 @@ package com.example.nct_lite.data.album
 
 import com.example.nct_lite.data.ApiClient
 import com.example.nct_lite.data.album.request.AlbumCreateRequest
+import com.example.nct_lite.data.album.request.AlbumUpdateRequest
 import com.example.nct_lite.data.album.response.AlbumListResponse
 import com.example.nct_lite.data.album.response.AlbumResponse
+import com.example.nct_lite.data.album.response.AlbumSongsResponse
 
 class AlbumRepository(
     private val remote: AlbumRemoteDataSource = AlbumRemoteDataSource(ApiClient.albumApi)
@@ -11,18 +13,16 @@ class AlbumRepository(
     suspend fun getAlbums(): Result<AlbumListResponse> {
         return try {
             val res = remote.getAlbums()
-
             if (res.isSuccessful && res.body() != null)
                 Result.success(res.body()!!)
             else
                 Result.failure(Exception("Failed to load albums"))
-
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun getAlbumById(id: String): Result<AlbumResponse> {
+    suspend fun getAlbumById(id: String): Result<AlbumSongsResponse> {
         return try {
             val res = remote.getAlbumById(id)
 
@@ -52,6 +52,31 @@ class AlbumRepository(
                 val errorMsg = res.errorBody()?.string() ?: "Upload failed: ${res.code()}"
                 Result.failure(Exception(errorMsg))
             }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    suspend fun updateAlbum(id: String, req: AlbumUpdateRequest): Result<AlbumResponse> {
+        return try {
+            val res = remote.updateAlbum(id, req) // Đảm bảo RemoteDataSource đã gọi API tương ứng
+
+            if (res.isSuccessful && res.body() != null) {
+                Result.success(res.body()!!)
+            } else {
+                val error = res.errorBody()?.string() ?: "Update failed"
+                Result.failure(Exception(error))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    suspend fun deleteAlbum(albumId: String): Result<Unit> {
+        return try {
+            val res = remote.deleteAlbum(albumId)
+            if (res.isSuccessful)
+                Result.success(Unit)
+            else
+                Result.failure(Exception("Failed to delete album $albumId"))
         } catch (e: Exception) {
             Result.failure(e)
         }

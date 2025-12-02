@@ -27,17 +27,14 @@ class LibraryAdapter(
 
     private val items = mutableListOf<LibraryItem>()
 
-    // HÀM QUAN TRỌNG: Nhận 2 danh sách và trộn lại
     fun submitData(myAlbums: List<AlbumMetadata>, savedAlbums: List<AlbumMetadata>) {
         items.clear()
 
-        // 1. Xử lý Album của tôi
         if (myAlbums.isNotEmpty()) {
             items.add(LibraryItem.Header("Playlist của tôi")) // Thêm tiêu đề
             items.addAll(myAlbums.map { LibraryItem.Album(it) }) // Thêm list album
         }
 
-        // 2. Xử lý Album đã lưu
         if (savedAlbums.isNotEmpty()) {
             items.add(LibraryItem.Header("Playlist đã lưu")) // Thêm tiêu đề
             items.addAll(savedAlbums.map { LibraryItem.Album(it) }) // Thêm list album
@@ -76,16 +73,12 @@ class LibraryAdapter(
     }
 
     override fun getItemCount(): Int = items.size
-
-    // --- VIEW HOLDERS ---
-
     class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.tvHeaderTitle)
         fun bind(item: LibraryItem.Header) {
             title.text = item.title
         }
     }
-
     class AlbumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val cover: ImageView = itemView.findViewById(R.id.playlist_image)
         private val title: TextView = itemView.findViewById(R.id.playlist_name)

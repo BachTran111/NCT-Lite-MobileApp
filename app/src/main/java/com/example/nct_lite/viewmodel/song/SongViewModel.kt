@@ -54,11 +54,8 @@ class SongViewModel(
         _searchResult.value = null
     }
 
-    // --- HÀM BẠN CẦN SỬA ---
     fun loadSongsFromIdList(songIds: List<String>) {
-        // 1. Xử lý trường hợp danh sách ID rỗng
         if (songIds.isEmpty()) {
-            // Phải tạo một SongListResponse rỗng giả lập
             val emptyResponse = SongListResponse(
                 status = "OK",
                 message = "Empty list",
@@ -70,26 +67,20 @@ class SongViewModel(
 
         viewModelScope.launch {
             try {
-                // 2. Chạy song song để tải từng bài hát
                 val results = songIds.map { id ->
                     async {
-                        repo.getSongById(id) // Trả về Result<SongResponse>
+                        repo.getSongById(id)
                     }
                 }.awaitAll()
 
-                // 3. Trích xuất dữ liệu: "Gỡ" vỏ Result và vỏ SongResponse để lấy SongMetadata
                 val validSongs = results.mapNotNull { result ->
-                    // getOrNull(): Nếu lỗi thì bỏ qua (trả về null)
-                    // .metadata: Lấy thông tin bài hát từ SongResponse
                     result.getOrNull()?.metadata
                 }
 
-                // 4. Đóng gói lại thành SongListResponse (Quan trọng!)
-                // Vì LiveData mong đợi SongListResponse chứ không phải List<SongMetadata>
                 val finalResponse = SongListResponse(
                     status = "OK",
                     message = "Loaded from IDs",
-                    metadata = validSongs // Gán list bài hát vào đây
+                    metadata = validSongs
                 )
 
                 _playlistSongs.postValue(Result.success(finalResponse))

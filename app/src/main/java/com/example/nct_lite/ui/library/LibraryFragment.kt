@@ -24,19 +24,13 @@ class LibraryFragment : Fragment() {
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
-    // ViewModels
     private val albumViewModel by lazy { ViewModelProvider(this)[AlbumViewModel::class.java] }
     private val songViewModel: SongViewModel by viewModels { SongViewModelFactory() }
     private val genreViewModel by lazy { ViewModelProvider(this)[GenreViewModel::class.java] }
 
-    // Adapter RecyclerView
     private lateinit var libraryAdapter: LibraryAdapter
-
-    // Biến lưu dữ liệu tạm để gộp
     private var myAlbumsList: List<AlbumMetadata> = emptyList()
     private var savedAlbumsList: List<AlbumMetadata> = emptyList()
-
-    // Biến thống kê
     private var playlistsCount = 0
     private var followersCount = 0
     private var followingCount = 0
@@ -52,32 +46,24 @@ class LibraryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView() // 1. Cài đặt RecyclerView
-        setupActions()      // 2. Cài đặt nút bấm
-        observeData()       // 3. Lắng nghe dữ liệu
-
-        // 4. Gọi API
+        setupRecyclerView()
+        setupActions()
+        observeData()
         albumViewModel.getMyOwnAlbum()
         albumViewModel.getSavedAlbum()
 
-        // Gọi API phụ cho thống kê
         songViewModel.loadAllSongs()
         genreViewModel.getGenres()
     }
 
     private fun setupRecyclerView() {
-        // Khởi tạo Adapter
         libraryAdapter = LibraryAdapter { album ->
-            // Xử lý khi click vào 1 playlist
-            // Chú ý: Dùng album.id hoặc album._id tùy vào DataClass của bạn
             (activity as? MainActivity)?.openAlbumDetail(album.id)
         }
-
-        // Gán vào RecyclerView trong XML
         binding.rvPlaylists.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = libraryAdapter
-            setHasFixedSize(true) // Tối ưu hiệu năng
+            setHasFixedSize(true)
         }
     }
 
@@ -94,15 +80,11 @@ class LibraryFragment : Fragment() {
     }
 
     private fun observeData() {
-        // --- LUỒNG 1: Album của tôi ---
         albumViewModel.myAlbums.observe(viewLifecycleOwner) { result ->
             result.onSuccess { response ->
-                // Cập nhật thống kê & Avatar (Chỉ lấy từ album của tôi)
                 playlistsCount = response.metadata.size
                 updateStats()
                 updateAvatar(response.metadata)
-
-                // Cập nhật list và refresh adapter
                 myAlbumsList = response.metadata
                 updateLibraryAdapter()
             }
@@ -111,16 +93,13 @@ class LibraryFragment : Fragment() {
             }
         }
 
-        // --- LUỒNG 2: Album đã lưu ---
         albumViewModel.savedAlbums.observe(viewLifecycleOwner) { result ->
             result.onSuccess { response ->
-                // Cập nhật list và refresh adapter
                 savedAlbumsList = response.metadata
                 updateLibraryAdapter()
             }
         }
 
-        // --- Các luồng phụ (Thống kê) ---
         songViewModel.songs.observe(viewLifecycleOwner) { result ->
             result.onSuccess { response ->
                 followersCount = response.metadata.size
@@ -136,7 +115,6 @@ class LibraryFragment : Fragment() {
         }
     }
 
-    // Hàm cập nhật Adapter: Gộp 2 list lại rồi đưa vào Adapter
     private fun updateLibraryAdapter() {
         libraryAdapter.submitData(myAlbumsList, savedAlbumsList)
     }

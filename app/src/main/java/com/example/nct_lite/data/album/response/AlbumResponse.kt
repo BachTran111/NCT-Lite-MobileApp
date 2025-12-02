@@ -2,9 +2,11 @@ package com.example.nct_lite.data.album.response
 
 import android.os.Parcelable
 import com.example.nct_lite.data.genre.model.Genre
+import com.example.nct_lite.data.song.response.SongMetadata
 import java.io.Serializable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 //import kotlinx.android.parcel.Parcelize
 
@@ -37,27 +39,25 @@ data class AlbumResponse(
 //    val __v: Int? = null
 //): Serializable
 
-@Parcelize // Tối ưu hóa việc truyền dữ liệu giữa các màn hình (nhanh hơn Serializable)
+@Parcelize
 data class AlbumMetadata(
     @SerializedName("_id")
-    val id: String, // Đổi tên biến thành 'id' cho chuẩn Kotlin
+    val id: String,
 
     @SerializedName("title")
     val title: String,
 
     @SerializedName("artist")
-    val artist: String?, // Nên để ? vì có thể album không có artist cụ thể
+    val artist: String?,
 
     @SerializedName("songIDs")
-    val songIDs: List<String> = emptyList(),
+    val songIDs: List<SongMetadata> = emptyList(),
 
-    // LƯU Ý: Chỉ để List<Genre> nếu API có .populate('genreIDs').
-    // Nếu API chỉ trả về list ID string ["123", "456"] thì phải sửa thành List<String>
     @SerializedName("genreIDs")
     val genreIDs: List<Genre> = emptyList(),
 
     @SerializedName("coverUrl")
-    val coverUrl: String? = null, // QUAN TRỌNG: Phải cho phép null để tránh crash
+    val coverUrl: String? = null,
 
     @SerializedName("releaseDate")
     val releaseDate: String? = null,
@@ -66,7 +66,7 @@ data class AlbumMetadata(
     val description: String? = null,
 
     @SerializedName("creatorId")
-    val creatorId: CreatorId? = null, // Kiểm tra kỹ CreatorId là String hay Object
+    val creatorId: @RawValue Any? = null,
 
     @SerializedName("isPublic")
     val isPublic: Boolean = true,
@@ -85,3 +85,14 @@ data class CreatorId(
     val _id: String,
     val username: String
 ): Serializable
+
+data class AlbumSongsResponse(
+    @SerializedName("status") val status: String,
+    @SerializedName("message") val message: String,
+    @SerializedName("metadata") val metadata: AlbumSongsData // Object chứa album và songs
+)
+
+data class AlbumSongsData(
+    @SerializedName("album") val album: AlbumMetadata,
+    @SerializedName("songs") val songs: List<SongMetadata>
+)

@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nct_lite.R
 import com.example.nct_lite.data.album.response.AlbumMetadata
 import com.example.nct_lite.data.song.response.SongMetadata
@@ -26,16 +24,12 @@ class PlaylistReviewFragment : Fragment() {
     private var _binding: PlaylistReviewBinding? = null
     private val binding get() = _binding!!
 
-    // ViewModel setup tương tự LibraryFragment
-//    private val albumViewModel by lazy { ViewModelProvider(this)[AlbumViewModel::class.java] }
-//    private val songViewModel by lazy { ViewModelProvider(this)[SongViewModel::class.java] }
     private val albumViewModel: AlbumViewModel by activityViewModels { AlbumViewModelFactory() }
     private val songViewModel: SongViewModel by activityViewModels { SongViewModelFactory() }
-    private var albumId: String? = null
-    private var albumMetadata: AlbumMetadata? = null
 
-    // Lưu danh sách tất cả bài hát để lọc sau
-    private var allSongs: List<SongMetadata> = emptyList()
+    private var albumId: String? = null
+    private var currentAlbum: AlbumMetadata? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +37,7 @@ class PlaylistReviewFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = PlaylistReviewBinding.inflate(inflater, container, false)
@@ -53,16 +46,10 @@ class PlaylistReviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        setupActions()
-//        setupUI()
-        // Gọi API
-        observeData()
-//        albumId?.let { albumViewModel.getAlbumById(it) }
-//        songViewModel.loadAllSongs()
-// 1. Setup Observe
+
+        setupActions()
         observeData()
 
-        // 2. Kích hoạt lấy Album
         albumId?.let { id ->
             albumViewModel.getAlbumById(id)
         }
@@ -70,7 +57,7 @@ class PlaylistReviewFragment : Fragment() {
 
     private fun setupActions() {
         binding.btnBack.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            parentFragmentManager.popBackStack()
         }
         binding.btnPlay.setOnClickListener {
             Toast.makeText(requireContext(), "Chức năng phát tất cả đang phát triển", Toast.LENGTH_SHORT).show()
@@ -78,44 +65,47 @@ class PlaylistReviewFragment : Fragment() {
     }
 
     private fun observeData() {
-        // 1. Lấy thông tin chi tiết Album
         albumViewModel.albumDetail.observe(viewLifecycleOwner) { result ->
             result.onSuccess { response ->
-                val album = response.metadata
+                val album = response.metadata.album
+                currentAlbum = album
                 renderAlbumInfo(album)
-// --- BƯỚC 2: CHUYỀN BÓNG SANG SONG VIEW MODEL ---
-                // Lấy danh sách ID từ album và yêu cầu SongViewModel đi tải
-                val listIds = album.songIDs ?: emptyList()// Đây là List<String>
+                val songs = response.metadata.songs
+                renderSongsList(songs)
 
-                // Hiện loading trong lúc chờ tải bài hát
-//                binding.progressBar.visibility = View.VISIBLE
-
-                // Gọi hàm chúng ta vừa viết ở Bước 1
-                songViewModel.loadSongsFromIdList(listIds)
-            }
-            result.onFailure {
-                // Xử lý lỗi tải album
+            }.onFailure {
+                Toast.makeText(context, "Lỗi tải dữ liệu: ${it.message}", Toast.LENGTH_SHORT).show()
             }
         }
-//        albumViewModel.getAlbumById()
+        albumViewModel.updateAlbumResult.observe(viewLifecycleOwner) { result ->
+            if (result == null) return@observe // Đã xử lý xong thì bỏ qua
 
-        // 2. Lấy danh sách tất cả bài hát (để lọc xem bài nào thuộc album này)
-//        songViewModel.songs.observe(viewLifecycleOwner) { result ->
-//            result.onSuccess { response ->
-//                allSongs = response.metadata
-//                renderSongsList(allSongs) // Render lại list khi tải xong bài hát
-//            }
-//        }
-        // --- BƯỚC 3: HỨNG DANH SÁCH BÀI HÁT ĐÃ TẢI XONG ---
-        songViewModel.playlistSongs.observe(viewLifecycleOwner) { result ->
-//            binding.progressBar.visibility = View.GONE // Tắt loading
+            binding.progressBar.visibility = View.GONE
 
-            result.onSuccess { response -> // Đây là List<SongMetadata> hoàn chỉnh
-                // Render danh sách ra màn hình
-                renderSongsList(response.metadata)
+            result.onSuccess {
+                Toast.makeText(context, "Đã xóa album thành công", Toast.LENGTH_SHORT).show()
+                albumViewModel.resetStatus() // Reset trạng thái LiveData
+
+                // Xóa xong thì quay về màn hình trước (Thư viện)
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+
+            }.onFailure {
+                Toast.makeText(context, "Lỗi xóa album: ${it.message}", Toast.LENGTH_SHORT).show()
+                albumViewModel.resetStatus()
             }
-            result.onFailure {
-                Toast.makeText(context, "Lỗi tải bài hát", Toast.LENGTH_SHORT).show()
+        }
+        albumViewModel.updateAlbumResult.observe(viewLifecycleOwner) { result ->
+            if (result == null) return@observe
+            binding.progressBar.visibility = View.GONE
+            result.onSuccess {
+                Toast.makeText(context, "Cập nhật thông tin thành công!", Toast.LENGTH_SHORT).show()
+                albumViewModel.resetStatus()
+                albumId?.let { id ->
+                    albumViewModel.getAlbumById(id)
+                }
+            }.onFailure {
+                Toast.makeText(context, "Cập nhật thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
+                albumViewModel.resetStatus()
             }
         }
     }
@@ -123,74 +113,34 @@ class PlaylistReviewFragment : Fragment() {
     private fun renderAlbumInfo(album: AlbumMetadata) {
         binding.albumTitle.text = album.title
         binding.artistName.text = album.artist ?: "Unknown Artist"
-        binding.albumInfo.text = getString(
-            R.string.album_year_template,
-            album.releaseDate ?: "Unknown"
-        )
+        val year = album.releaseDate?.take(4) ?: ""
+        binding.albumInfo.text = if (year.isNotEmpty()) "Album • $year" else "Album"
+
         val validCover = if (album.coverUrl.isNullOrEmpty()) null else album.coverUrl
-        Picasso.get()
-            .load(validCover)
-            .placeholder(R.drawable.ic_avatar_foreground)
-            .error(R.drawable.ic_avatar_foreground)
-            .into(binding.albumArt)
-    }
-
-    private fun renderSongsList(songs: List<SongMetadata>) {
-        // Phải đảm bảo có cả Metadata Album và List bài hát thì mới render
-//        val album = albumMetadata ?: return
-//        if (allSongs.isEmpty()) return
-
-        val container = binding.songsContainer
-        container.removeAllViews() // Xóa view cũ để tránh trùng lặp
-
-        val inflater = LayoutInflater.from(requireContext())
-
-        // LỌC BÀI HÁT: Chỉ lấy những bài có ID nằm trong danh sách songIDs của Album
-//        val songList = albumViewModel.getAlbumById(album._id)
-//        val albumSongs = allSongs.filter { album.songIDs.contains(it._id) }
-
-        // Nếu không có bài nào
-        if (songs.isEmpty()) {
-            // Có thể hiển thị text "Chưa có bài hát" nếu muốn
-            return
+        Picasso.get().load(validCover).placeholder(R.drawable.ic_avatar_foreground).into(binding.albumArt)
+        val ivMore = binding.ivMore
+        ivMore.setOnClickListener {
+            showAlbumOptions(it, album)
         }
-
-        songs.forEach { song ->
-            // Inflate layout item (item_playlist_song)
-            val itemView = inflater.inflate(R.layout.item_playlist_song, container, false)
-
-            val cover = itemView.findViewById<ImageView>(R.id.imgCover)
-            val title = itemView.findViewById<TextView>(R.id.tvSongTitle)
-            val artist = itemView.findViewById<TextView>(R.id.tvArtist)
-            val moreBtn = itemView.findViewById<ImageView>(R.id.btnMore)
-
-            title.text = song.title
-            artist.text = song.artist
-
-            // Xử lý ảnh bài hát an toàn
-            val validSongCover = if (song.coverUrl.isNullOrEmpty()) null else song.coverUrl
-            Picasso.get()
-                .load(validSongCover)
-                .placeholder(R.drawable.ic_avatar_background)
-                .error(R.drawable.ic_avatar_background)
-                .into(cover)
-
-            // Sự kiện Click vào bài hát
-            itemView.setOnClickListener {
-//                startActivity(SongViewActivity.createIntent(requireContext(), song))
+    }
+    private fun renderSongsList(songs: List<SongMetadata>) {
+        val adapter = ItemPlaylistSongAdapter(
+            songs = songs,
+            onClick = { song ->
                 context?.let { ctx ->
                     startActivity(SongViewActivity.createIntent(ctx, song))
                 }
+            },
+            onMoreClick = { song, view ->
+//                com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment.newInstance(song)
+//                    .show(parentFragmentManager, "BottomSheetSelected")
+                showSongOptions(song, view)
             }
-
-            // Sự kiện nút More (...)
-            moreBtn.setOnClickListener {
-                com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment()
-                    .show(parentFragmentManager, "BottomSheetSelected")
-            }
-
-            // Thêm view vào LinearLayout container
-            container.addView(itemView)
+        )
+        binding.rvSongs.apply {
+            layoutManager = LinearLayoutManager(context)
+            this.adapter = adapter
+            setHasFixedSize(true)
         }
     }
 
@@ -198,16 +148,105 @@ class PlaylistReviewFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+    private fun showSongOptions(song: SongMetadata, anchorView: View) {
+        val popup = androidx.appcompat.widget.PopupMenu(requireContext(), anchorView)
+        popup.menu.add(0, 1, 0, "Xóa khỏi Playlist")
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                1 -> {
+                    confirmRemoveSong(song)
+                    true
+                }
+                else -> false
+            }
+        }
 
+        popup.show()
+    }
+
+    private fun confirmRemoveSong(song: SongMetadata) {
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Xóa bài hát")
+            .setMessage("Bạn có chắc muốn xóa bài '${song.title}' khỏi playlist này?")
+            .setPositiveButton("Xóa") { _, _ ->
+                // Gọi ViewModel để xóa
+                val currentAlbumId = albumId
+                if (currentAlbumId != null) {
+                    // Hiện loading nếu cần
+                    // binding.progressBar.visibility = View.VISIBLE
+                    albumViewModel.moveSongFromAlbum(currentAlbumId, song._id)
+                }
+            }
+            .setNegativeButton("Hủy", null)
+            .show()
+    }
+    private fun showAlbumOptions(anchor: View, album: AlbumMetadata) {
+        val popup = androidx.appcompat.widget.PopupMenu(requireContext(), anchor)
+        popup.menu.add(0, 1, 0, "Chỉnh sửa thông tin")
+        popup.menu.add(0, 2, 1, "Xóa Album")
+
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                1 -> { // Sửa
+                    showEditAlbumDialog(album)
+                    true
+                }
+                2 -> { // Xóa
+                    showConfirmDeleteDialog(album)
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
+    }
+
+
+    // 2. Hiển thị Dialog Xóa
+    private fun showConfirmDeleteDialog(album: AlbumMetadata) {
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Xóa Album")
+            .setMessage("Bạn có chắc chắn muốn xóa album '${album.title}' không? Hành động này không thể hoàn tác.")
+            .setPositiveButton("Xóa") { _, _ ->
+                albumViewModel.deleteAlbum(album.id)
+            }
+            .setNegativeButton("Hủy", null)
+            .show()
+    }
+    private fun showEditAlbumDialog(album: AlbumMetadata) {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_edit_album, null)
+        val etTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etAlbumTitle)
+        val etDesc = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etAlbumDesc)
+        etTitle.setText(album.title)
+        etDesc.setText(album.description ?: "")
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Chỉnh sửa thông tin")
+            .setView(dialogView)
+            .setPositiveButton("Lưu") { _, _ ->
+                val newTitle = etTitle.text.toString().trim()
+                val newDesc = etDesc.text.toString().trim()
+                if (newTitle.isNotEmpty()) {
+                    binding.progressBar.visibility = View.VISIBLE
+                    albumViewModel.updateAlbum(
+                        albumId = album.id,
+                        title = newTitle,
+                        artist = album.artist ?: "", // Giữ nguyên
+                        description = newDesc,       // Giá trị mới
+                        coverUrl = album.coverUrl ?: "", // Giữ nguyên
+                        isPublic = album.isPublic      // Giữ nguyên
+                    )
+                } else {
+                    Toast.makeText(context, "Tên album không được để trống", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Hủy", null) // Đóng dialog không làm gì
+            .show()
+    }
     companion object {
         private const val ARG_ALBUM_ID = "album_id"
-
-        fun newInstance(albumId: String): PlaylistReviewFragment {
-            val fragment = PlaylistReviewFragment()
-            fragment.arguments = Bundle().apply {
-                putString(ARG_ALBUM_ID, albumId)
-            }
-            return fragment
+        fun newInstance(albumId: String) = PlaylistReviewFragment().apply {
+            arguments = Bundle().apply { putString(ARG_ALBUM_ID, albumId) }
         }
     }
 }
