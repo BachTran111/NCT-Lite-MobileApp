@@ -11,6 +11,8 @@ import com.example.nct_lite.data.album.response.AlbumListResponse
 import com.example.nct_lite.data.album.response.AlbumResponse
 import com.example.nct_lite.data.album.response.AlbumSongsResponse
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class AlbumViewModel(
     private val repo: AlbumRepository = AlbumRepository()
@@ -26,20 +28,23 @@ class AlbumViewModel(
 
     val _resetAddSongResult = MutableLiveData< Result<Unit>?>()
     val resetAddSongResult: LiveData<Result<Unit>?> = _resetAddSongResult
-
     val albums = MutableLiveData<Result<AlbumListResponse>>()
     val albumDetail = MutableLiveData<Result<AlbumSongsResponse>>()
     val createAlbumResult = MutableLiveData<Result<AlbumResponse>?>()
     private val _myAlbums = MutableLiveData<Result<AlbumListResponse>>()
     val myAlbums: LiveData<Result<AlbumListResponse>> = _myAlbums
-
+    private val _publicAlbums = MutableLiveData<Result<AlbumListResponse>>()
+    val publicAlbums: LiveData<Result<AlbumListResponse>> = _publicAlbums
     private val _savedAlbums = MutableLiveData<Result<AlbumListResponse>>()
     val savedAlbums: LiveData<Result<AlbumListResponse>> = _savedAlbums
     fun createAlbum(
-        albumCreateRequest: AlbumCreateRequest
+        title: RequestBody,
+        description: RequestBody?,
+        isPublic: RequestBody?,
+        cover: MultipartBody.Part?
     ) {
         viewModelScope.launch {
-            createAlbumResult.postValue(repo.createAlbum( albumCreateRequest))
+            createAlbumResult.postValue(repo.createAlbum( title, description, isPublic, cover))
         }
     }
     fun updateAlbum(
@@ -86,7 +91,7 @@ class AlbumViewModel(
 
     fun getAllAlbums() {
         viewModelScope.launch {
-            albums.postValue(repo.getAlbums())
+            _publicAlbums.postValue(repo.getAlbums())
         }
     }
 
@@ -112,5 +117,8 @@ class AlbumViewModel(
         _addSongResult.value = null
         _removeSongResult.value = null
         _updateAlbumResult.value = null
+    }
+    fun resetAddSongResult(){
+        _resetAddSongResult.value = null
     }
 }

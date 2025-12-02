@@ -38,6 +38,7 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        albumViewModel.resetAddSongResult()
 
         if (targetSongId == null) {
             dismiss()

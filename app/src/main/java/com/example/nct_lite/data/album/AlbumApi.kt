@@ -5,13 +5,17 @@ import com.example.nct_lite.data.album.request.AlbumUpdateRequest
 import com.example.nct_lite.data.album.response.AlbumListResponse
 import com.example.nct_lite.data.album.response.AlbumResponse
 import com.example.nct_lite.data.album.response.AlbumSongsResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface AlbumApi {
@@ -19,9 +23,17 @@ interface AlbumApi {
     @GET("albums")
     suspend fun getAlbums(): Response<AlbumListResponse>
 
+//    @POST("albums")
+//    suspend fun createAlbum(
+//        @Body albumCreateRequest: AlbumCreateRequest
+//    ): Response<AlbumResponse>
+    @Multipart
     @POST("albums")
     suspend fun createAlbum(
-        @Body albumCreateRequest: AlbumCreateRequest
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody?,
+        @Part("isPublic") isPublic: RequestBody?,
+        @Part cover: MultipartBody.Part?
     ): Response<AlbumResponse>
     @GET("albums/me")
     suspend fun getMyOwnALbum(): Response<AlbumListResponse>

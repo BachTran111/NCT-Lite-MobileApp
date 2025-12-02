@@ -1,6 +1,7 @@
 package com.example.nct_lite.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.android.volley.VolleyLog.TAG
 import com.example.nct_lite.R
+import com.example.nct_lite.data.album.response.AlbumListResponse
 import com.example.nct_lite.data.album.response.AlbumMetadata
 import com.example.nct_lite.data.history.response.PlayHistoryResponse
 import com.example.nct_lite.data.song.model.Song
@@ -24,6 +27,7 @@ import com.example.nct_lite.viewmodel.history.HistoryViewModel
 import com.example.nct_lite.viewmodel.song.SongViewModel
 import com.example.nct_lite.viewmodel.song.SongViewModelFactory
 import com.squareup.picasso.Picasso
+import kotlin.math.log
 
 class HomeFragment : Fragment() {
 
@@ -32,12 +36,13 @@ class HomeFragment : Fragment() {
     private val songViewModel: SongViewModel by activityViewModels {
         SongViewModelFactory()
     }
-
 //    private val songViewModel by lazy { ViewModelProvider(this)[SongViewModel::class.java] }
     private val albumViewModel by lazy { ViewModelProvider(this)[AlbumViewModel::class.java] }
     private val historyViewModel by lazy { ViewModelProvider(this)[HistoryViewModel::class.java] }
-
     private var cachedSongs: List<SongMetadata> = emptyList()
+    private var publicAlbumsList: List<AlbumMetadata> = emptyList()
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,12 +76,16 @@ class HomeFragment : Fragment() {
 //            result.onFailure { e -> showError("Error loading history: ${e.message}") }
 //        }
 
-//        albumViewModel.albums.observe(viewLifecycleOwner) { result ->
-//            result.onSuccess { response ->
-//                populateBestAlbums(response.metadata)
-//            }
-//            result.onFailure { e -> showError("Error loading albums: ${e.message}") }
-//        }
+        albumViewModel.publicAlbums.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { response ->
+                val playlistCount = response.metadata.size
+                publicAlbumsList = response.metadata
+                populateBestAlbums(publicAlbumsList)
+            }
+            result.onFailure { e ->
+                showError("Error loading albums: ${e.message}")
+            }
+        }
     }
 
     private fun populateArtists(songs: List<SongMetadata>) {
@@ -181,34 +190,34 @@ class HomeFragment : Fragment() {
 //        }
 //    }
 
-//    private fun populateBestAlbums(albums: List<AlbumMetadata>) {
-//        val context = requireContext()
-//        val inflater = LayoutInflater.from(context)
-//        val container = binding.containerBestAlbums
-//        container.removeAllViews()
-//
-//        albums.forEach { album ->
-//            val view = inflater.inflate(R.layout.item_album, container, false)
-//            val imageView = view.findViewById<ImageView>(R.id.image_album)
-//            val titleView = view.findViewById<TextView>(R.id.text_album_title)
-//            val artistView = view.findViewById<TextView>(R.id.text_album_artist)
-//
-//            titleView.text = album.title
-//            artistView.text = album.artist ?: "Unknown Artist"
-//            val validCover = if (album.coverUrl.isNullOrEmpty()) null else album.coverUrl
-//
-//            Picasso.get()
-//                .load(validCover)
-//                .placeholder(R.drawable.placeholder_album)
-//                .error(R.drawable.placeholder_album)
-//                .fit().centerCrop()
-//                .into(imageView)
-//            view.setOnClickListener {
-//                (activity as? MainActivity)?.openAlbumDetail(album.id)
-//            }
-//            container.addView(view)
-//        }
-//    }
+    private fun populateBestAlbums(albums: List<AlbumMetadata>) {
+        val context = requireContext()
+        val inflater = LayoutInflater.from(context)
+        val container = binding.containerBestAlbums
+        container.removeAllViews()
+
+        albums.forEach { album ->
+            val view = inflater.inflate(R.layout.item_album, container, false)
+            val imageView = view.findViewById<ImageView>(R.id.image_album)
+            val titleView = view.findViewById<TextView>(R.id.text_album_title)
+            val artistView = view.findViewById<TextView>(R.id.text_album_artist)
+
+            titleView.text = album.title ?: "Unknown Album"
+            artistView.text = album.artist ?: "Unknown Artist"
+            val validCover = if (album.coverUrl.isNullOrEmpty()) null else album.coverUrl
+
+            Picasso.get()
+                .load(validCover)
+                .placeholder(R.drawable.placeholder_album)
+                .error(R.drawable.placeholder_album)
+                .fit().centerCrop()
+                .into(imageView)
+            view.setOnClickListener {
+                (activity as? MainActivity)?.openAlbumDetail(album.id)
+            }
+            container.addView(view)
+        }
+    }
 
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

@@ -6,6 +6,8 @@ import com.example.nct_lite.data.album.request.AlbumUpdateRequest
 import com.example.nct_lite.data.album.response.AlbumListResponse
 import com.example.nct_lite.data.album.response.AlbumResponse
 import com.example.nct_lite.data.album.response.AlbumSongsResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class AlbumRepository(
     private val remote: AlbumRemoteDataSource = AlbumRemoteDataSource(ApiClient.albumApi)
@@ -39,11 +41,16 @@ class AlbumRepository(
     }
 
     suspend fun createAlbum(
-        albumCreateRequest: AlbumCreateRequest
-    ): Result<AlbumResponse> {
+        title: RequestBody,
+        description: RequestBody?,
+        isPublic: RequestBody?,
+        cover: MultipartBody.Part?    ): Result<AlbumResponse> {
         return try {
             val res = remote.createAlbum(
-                albumCreateRequest = albumCreateRequest
+                title = title,
+                description = description,
+                isPublic = isPublic,
+                cover = cover
             )
 
             if (res.isSuccessful && res.body() != null) {
