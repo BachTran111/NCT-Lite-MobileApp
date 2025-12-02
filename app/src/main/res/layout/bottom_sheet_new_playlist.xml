@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet_new_playlist_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#1C1C1C"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/title_new_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_vertical"
+        android:text="Create new playlist"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="25dp"
+        android:text="Add image" />
+
+    <EditText
+        android:id="@+id/edit_playlist_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/rounded_input_bg"
+        android:hint="Enter name"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="#B3B3B3" />
+
+    <EditText
+        android:id="@+id/edit_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/rounded_input_bg"
+        android:hint="Description"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="#B3B3B3" />
+
+    <CheckBox
+        android:id="@+id/checkBox3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:buttonTint="#FFFFFF"
+        android:checked="true"
+        android:outlineAmbientShadowColor="#FFFFFF"
+        android:shadowColor="#FFFFFF"
+        android:text="Public"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp" />
+
+    <LinearLayout
+        android:id="@+id/actions_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:backgroundTint="#CCCCCC"
+            android:text="Cancel"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="12dp"
+            android:layout_height="48dp" />
+
+        <Button
+            android:id="@+id/btn_create"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:backgroundTint="#1ED760"
+            android:text="Create"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

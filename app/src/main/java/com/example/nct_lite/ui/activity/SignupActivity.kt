@@ -8,12 +8,16 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nct_lite.MyApplication
 import com.example.nct_lite.R
-import com.example.nct_lite.viewmodel.AuthViewModel
+import com.example.nct_lite.viewmodel.auth.AuthViewModel
+import com.example.nct_lite.viewmodel.auth.AuthViewModelFactory
 
 class SignupActivity : AppCompatActivity() {
 
-    private val authViewModel: AuthViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels {
+        AuthViewModelFactory((application as MyApplication).appContainer.authRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +53,12 @@ class SignupActivity : AppCompatActivity() {
     private fun observeRegisterResponse() {
         authViewModel.authResponse.observe(this) { result ->
             result.onSuccess {
-                Toast.makeText(this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(this, "Register success!", Toast.LENGTH_SHORT).show()
+                com.example.nct_lite.data.SessionManager.saveAuth(
+                    this,
+                    it.metadata.token,
+                    it.metadata.role
+                )
                 val intent = Intent(this, ChooseArtistsActivity::class.java)
                 intent.putExtra("USER_NAME", it.metadata.role)
                 startActivity(intent)

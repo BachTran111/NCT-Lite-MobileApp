@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="8dp"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
@@ -21,15 +22,26 @@
 
         <TextView
             android:id="@+id/text_quick_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Boat"
             android:textSize="16sp"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/text_quick_artist"
             android:text="Ed Sheeran"
             android:textSize="14sp"
             android:textColor="#B3B3B3" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/ic_more" />
 </LinearLayout>

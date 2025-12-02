@@ -7,7 +7,7 @@
     android:background="#121212"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.HomeActivity">
+    tools:context=".ui.activity.MainActivity">
 
     <!-- Nội dung chính cuộn được -->
     <androidx.core.widget.NestedScrollView
@@ -28,7 +28,7 @@
                 android:id="@+id/text_home_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Good Evening"
+                android:text="Welcome to NCT-Lite"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
@@ -120,58 +120,47 @@
             </LinearLayout>
 
             <!-- Mục 3: Favorite songs -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Favorite songs"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Favorite songs"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginBottom="8dp" />-->
 
-            <LinearLayout
-                android:id="@+id/container_fav_songs"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+<!--            <LinearLayout-->
+<!--                android:id="@+id/container_fav_songs"-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content" />-->
 
             <!-- Mục 4: Best albums -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Best albums"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Best albums"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginBottom="8dp" />-->
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never"
-                android:scrollbars="none">
+<!--            <HorizontalScrollView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:overScrollMode="never"-->
+<!--                android:scrollbars="none">-->
 
-                <LinearLayout
-                    android:id="@+id/container_best_albums"
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </HorizontalScrollView>
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/container_best_albums"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content" />-->
+<!--            </HorizontalScrollView>-->
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <!-- Thanh điều hướng dưới cùng -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#181818"
-        android:paddingVertical="4dp"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
-        app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>

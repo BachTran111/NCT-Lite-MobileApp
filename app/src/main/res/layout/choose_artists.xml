@@ -70,35 +70,7 @@
             android:columnCount="3"
             android:padding="16dp"
             android:columnOrderPreserved="false"
-            android:alignmentMode="alignMargins">
-
-            <!-- Ví dụ 1 nghệ sĩ -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_columnWeight="1">
-
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/sample_artist"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/bg_artist_image"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Artist Name"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:layout_marginTop="6dp"
-                    android:gravity="center"/>
-            </LinearLayout>
-
-        </GridLayout>
+            android:alignmentMode="alignMargins" />
     </ScrollView>
 
     <!-- Nút Next cố định -->

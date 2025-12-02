@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#212121"
+    android:fontFamily="@font/montserrat_light"
+    tools:context=".ui.admin.AdminPreviewFragment">
+
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_search_bar"
+        android:drawableEnd="@drawable/search_24dp_1f1f1f_fill0_wght400_grad0_opsz24"
+        android:drawablePadding="12dp"
+        android:hint="Enter song name"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#9E9E9E"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llFilters"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@id/etSearch"
+        app:layout_constraintStart_toStartOf="@id/etSearch"
+        app:layout_constraintTop_toBottomOf="@id/etSearch">
+
+        <Button
+            android:id="@+id/btnFilterType"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_filter_button"
+            android:drawableEnd="@drawable/ic_filter_list"
+            android:paddingHorizontal="16dp"
+            android:text="Type"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="@null"/>
+
+        <Button
+            android:id="@+id/btnFilterDate"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/bg_filter_button"
+            android:drawableEnd="@drawable/ic_filter_list"
+            android:paddingHorizontal="16dp"
+            android:text="dd/mm/yy"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="@null"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llFilters"
+        tools:listitem="@layout/list_item_song" />
+
+    <LinearLayout
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <Button
+            android:id="@+id/button12"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="Preview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="0dp"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:textColor="#FFFFFF"
+            android:drawableTop="@drawable/ic_preview"
+            android:drawableTint="#FFFFFF"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/FlatButton"
+            android:fontFamily="@font/montserrat_light"
+            app:layout_constraintWidth_percent="0.333"/>
+
+        <Button
+            android:id="@+id/button15"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_manage"
+            android:drawableTint="#80FFFFFF"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:text="Manage"
+            android:textAlignment="center"
+            android:textColor="#80FFFFFF"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="275dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/FlatButton"
+            android:fontFamily="@font/montserrat_light"
+            app:layout_constraintWidth_percent="0.333"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
