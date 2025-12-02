@@ -33,7 +33,6 @@ class AlbumViewModel(
     private val _myAlbums = MutableLiveData<Result<AlbumListResponse>>()
     val myAlbums: LiveData<Result<AlbumListResponse>> = _myAlbums
 
-    // LiveData cho "Album đã lưu"
     private val _savedAlbums = MutableLiveData<Result<AlbumListResponse>>()
     val savedAlbums: LiveData<Result<AlbumListResponse>> = _savedAlbums
     fun createAlbum(
@@ -52,7 +51,6 @@ class AlbumViewModel(
         isPublic: Boolean
     ) {
         viewModelScope.launch {
-            // 1. Tạo object Request từ dữ liệu nhập vào
             val request = AlbumUpdateRequest(
                 title = title,
                 artist = artist,
@@ -62,7 +60,6 @@ class AlbumViewModel(
             )
 
             try {
-                // 2. Gọi Repository
                 val result = repo.updateAlbum(albumId, request)
                 _updateAlbumResult.postValue(result)
             } catch (e: Exception) {

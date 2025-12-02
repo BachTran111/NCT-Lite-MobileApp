@@ -20,7 +20,6 @@ class NewPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: BottomSheetNewPlaylistBinding? = null
     private val binding get() = _binding!!
 
-    // Sử dụng activityViewModels để chia sẻ ViewModel với Fragment/Activity gọi nó
     private val albumViewModel: AlbumViewModel by activityViewModels { AlbumViewModelFactory() }
 
     override fun onCreateView(
@@ -43,13 +42,13 @@ class NewPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
             val description = binding.editDescription.text.toString().trim()
 
             if (title.isEmpty()) {
-                Toast.makeText(requireContext(), "Vui lòng nhập tên playlist", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please enter playlist name", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val token = SessionManager.getToken(requireContext())
             if (token.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), "Lỗi xác thực, vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed to get token, please login again", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -67,12 +66,11 @@ class NewPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
         albumViewModel.createAlbumResult.observe(viewLifecycleOwner) { result ->
             if (result == null) return@observe
             result.onSuccess { response ->
-                Toast.makeText(requireContext(), "Tạo playlist '${response.status}' thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Create playlist '${response.status}' Success!", Toast.LENGTH_SHORT).show()
                 dismiss()
             }.onFailure { error ->
-                Toast.makeText(requireContext(), "Tạo playlist thất bại: ${error.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Failed to create playlist: ${error.message}", Toast.LENGTH_LONG).show()
             }
-            // Kích hoạt lại nút dù thành công hay thất bại
             binding.btnCreate.isEnabled = true
         }
     }
@@ -82,7 +80,7 @@ class NewPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        albumViewModel.createAlbumResult.postValue(null) // Dọn dẹp LiveData để tránh trigger lại
+        albumViewModel.createAlbumResult.postValue(null)
         _binding = null
     }
 }

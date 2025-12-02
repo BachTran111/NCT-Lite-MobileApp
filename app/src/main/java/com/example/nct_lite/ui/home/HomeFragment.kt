@@ -66,15 +66,17 @@ class HomeFragment : Fragment() {
             result.onFailure { e -> showError("Error loading songs: ${e.message}") }
         }
 
-        historyViewModel.history.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { response -> populateFavoriteSongs(response) }
-            result.onFailure { e -> showError("Error loading history: ${e.message}") }
-        }
+//        historyViewModel.history.observe(viewLifecycleOwner) { result ->
+//            result.onSuccess { response -> populateFavoriteSongs(response) }
+//            result.onFailure { e -> showError("Error loading history: ${e.message}") }
+//        }
 
-        albumViewModel.albums.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { response -> populateBestAlbums(response.metadata) }
-            result.onFailure { e -> showError("Error loading albums: ${e.message}") }
-        }
+//        albumViewModel.albums.observe(viewLifecycleOwner) { result ->
+//            result.onSuccess { response ->
+//                populateBestAlbums(response.metadata)
+//            }
+//            result.onFailure { e -> showError("Error loading albums: ${e.message}") }
+//        }
     }
 
     private fun populateArtists(songs: List<SongMetadata>) {
@@ -122,14 +124,16 @@ class HomeFragment : Fragment() {
         val row3 = binding.containerQuickPickRow3
 
         listOf(row1, row2, row3).forEach { it.removeAllViews() }
+        val limitedSongs = songs.take(9)
 
-        songs.chunked(3).forEachIndexed { index, chunk ->
+        limitedSongs.chunked(3).forEachIndexed { index, chunk ->
             val target = when (index) {
                 0 -> row1
                 1 -> row2
-                else -> row3
+                2 -> row3
+                else -> null
             }
-
+            target?.let{layout ->
             chunk.forEach { song ->
                 val view = inflater.inflate(R.layout.item_quick_pick, target, false)
                 val titleView = view.findViewById<TextView>(R.id.text_quick_title)
@@ -153,69 +157,58 @@ class HomeFragment : Fragment() {
 
                 target.addView(view)
             }
-        }
-    }
-
-    private fun populateFavoriteSongs(response: PlayHistoryResponse) {
-        val context = requireContext()
-        val container = binding.containerFavSongs
-        container.removeAllViews()
-
-        response.metadata.items.forEach { item ->
-            val textView = TextView(context).apply {
-                text = item.song.title
-                textSize = 14f
-                setTextColor(ContextCompat.getColor(context, android.R.color.white))
-                setPadding(16, 8, 16, 8)
-                setOnClickListener {
-                    val metadata = historySongToMetadata(item.song)
-                    startActivity(SongViewActivity.createIntent(requireContext(), metadata))
-                }
             }
-            container.addView(textView)
         }
     }
 
-    private fun historySongToMetadata(song: Song): SongMetadata {
-        return SongMetadata(
-            _id = song._id,
-            title = song.title,
-            artist = song.artist,
-            genreIDs = emptyList(),
-            url = song.url,
-            coverUrl = song.coverUrl,
-            uploaderId = null,
-            createdAt = "",
-            updatedAt = ""
-        )
-    }
+//    private fun populateFavoriteSongs(response: PlayHistoryResponse) {
+//        val context = requireContext()
+//        val container = binding.containerFavSongs
+//        container.removeAllViews()
+//
+//        response.metadata.items.forEach { item ->
+//            val textView = TextView(context).apply {
+//                text = item.song.title
+//                textSize = 14f
+//                setTextColor(ContextCompat.getColor(context, android.R.color.white))
+//                setPadding(16, 8, 16, 8)
+//                setOnClickListener {
+//                    val metadata = historySongToMetadata(item.song)
+//                    startActivity(SongViewActivity.createIntent(requireContext(), metadata))
+//                }
+//            }
+//            container.addView(textView)
+//        }
+//    }
 
-    private fun populateBestAlbums(albums: List<AlbumMetadata>) {
-        val context = requireContext()
-        val inflater = LayoutInflater.from(context)
-        val container = binding.containerBestAlbums
-        container.removeAllViews()
-
-        albums.forEach { album ->
-            val view = inflater.inflate(R.layout.item_album, container, false)
-            val imageView = view.findViewById<ImageView>(R.id.image_album)
-            val titleView = view.findViewById<TextView>(R.id.text_album_title)
-            val artistView = view.findViewById<TextView>(R.id.text_album_artist)
-
-            titleView.text = album.title
-            artistView.text = album.artist
-            if (!album.coverUrl.isNullOrEmpty()) {
-                Picasso.get()
-                    .load(album.coverUrl)
-                    .placeholder(R.drawable.placeholder_album)
-                    .into(imageView)
-            } else {
-                imageView.setImageResource(R.drawable.placeholder_album)
-            }
-
-            container.addView(view)
-        }
-    }
+//    private fun populateBestAlbums(albums: List<AlbumMetadata>) {
+//        val context = requireContext()
+//        val inflater = LayoutInflater.from(context)
+//        val container = binding.containerBestAlbums
+//        container.removeAllViews()
+//
+//        albums.forEach { album ->
+//            val view = inflater.inflate(R.layout.item_album, container, false)
+//            val imageView = view.findViewById<ImageView>(R.id.image_album)
+//            val titleView = view.findViewById<TextView>(R.id.text_album_title)
+//            val artistView = view.findViewById<TextView>(R.id.text_album_artist)
+//
+//            titleView.text = album.title
+//            artistView.text = album.artist ?: "Unknown Artist"
+//            val validCover = if (album.coverUrl.isNullOrEmpty()) null else album.coverUrl
+//
+//            Picasso.get()
+//                .load(validCover)
+//                .placeholder(R.drawable.placeholder_album)
+//                .error(R.drawable.placeholder_album)
+//                .fit().centerCrop()
+//                .into(imageView)
+//            view.setOnClickListener {
+//                (activity as? MainActivity)?.openAlbumDetail(album.id)
+//            }
+//            container.addView(view)
+//        }
+//    }
 
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

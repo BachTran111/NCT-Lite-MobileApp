@@ -67,17 +67,14 @@ class ArtistPlaylistFragment : Fragment() {
 
     private fun setupRecyclerView() {
         songAdapter = QuickPickAdapter(
-            songs = emptyList(), // Tham số 1: List bài hát
+            songs = emptyList(),
 
-            // Tham số 2: Xử lý click vào bài hát
             onSongClicked = { song ->
                 val intent = SongViewActivity.createIntent(requireContext(), song)
                 startActivity(intent)
             },
 
-            // Tham số 3: Xử lý click nút 3 chấm (More)
             onMoreClicked = { song ->
-                // Hiện BottomSheet tùy chọn
                 (activity as? MainActivity)?.showSongOptions(song)
             }
         )
@@ -94,7 +91,7 @@ class ArtistPlaylistFragment : Fragment() {
             result?.onSuccess { response ->
                 songAdapter.updateSongs(response.metadata)
             }?.onFailure {
-                Toast.makeText(requireContext(), "Không thể tải danh sách bài hát", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed to load songs", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -102,7 +99,7 @@ class ArtistPlaylistFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        songViewModel.clearSearchResult() // Xóa kết quả tìm kiếm cũ
+        songViewModel.clearSearchResult()
     }
 
     companion object {

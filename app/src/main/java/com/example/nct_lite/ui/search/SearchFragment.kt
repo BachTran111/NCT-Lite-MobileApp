@@ -68,7 +68,7 @@ class SearchFragment : Fragment() {
 //                renderSongList(binding.containerSearchSuggestions, cachedSongs.take(6))
             }
             result.onFailure {
-                Toast.makeText(requireContext(), "Không tải được danh sách bài hát", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed to load songs", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -78,7 +78,7 @@ class SearchFragment : Fragment() {
                 renderSongList(binding.containerSearchResults, response.metadata)
             }
             result?.onFailure {
-                Toast.makeText(requireContext(), "Không tìm thấy bài hát phù hợp", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Can not find any songs", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -111,7 +111,9 @@ class SearchFragment : Fragment() {
             }
 
             moreBtn.setOnClickListener {
-                com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment().show(parentFragmentManager, "BottomSheetSelected")
+//                com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment().show(parentFragmentManager, "BottomSheetSelected")
+                com.example.nct_lite.ui.fragment.BottomSheetSelectedFragment.newInstance(song)
+                    .show(parentFragmentManager, "BottomSheetSelected")
             }
 
             container.addView(view)

@@ -17,14 +17,6 @@ import com.example.nct_lite.data.genre.model.Genre
 import com.example.nct_lite.viewmodel.genre.GenreViewModel
 import com.example.nct_lite.viewmodel.genre.GenreViewModelFactory
 
-/**
- * ChooseArtistsActivity - Màn hình chọn nghệ sĩ yêu thích
- *
- * Flow:
- * 1. SignupActivity -> ChooseArtistsActivity (sau khi đăng ký thành công)
- * 2. ChooseArtistsActivity -> MainActivity (sau khi chọn artists và nhấn Next)
- *    MainActivity hiện là màn hình Home chính thay vì dùng Fragment.
- */
 class ChooseArtistsActivity : AppCompatActivity() {
 
     private val genreViewModel: GenreViewModel by viewModels { GenreViewModelFactory() }

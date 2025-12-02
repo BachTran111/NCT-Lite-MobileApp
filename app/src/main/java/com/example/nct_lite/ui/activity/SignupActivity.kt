@@ -53,7 +53,7 @@ class SignupActivity : AppCompatActivity() {
     private fun observeRegisterResponse() {
         authViewModel.authResponse.observe(this) { result ->
             result.onSuccess {
-                Toast.makeText(this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Register success!", Toast.LENGTH_SHORT).show()
                 com.example.nct_lite.data.SessionManager.saveAuth(
                     this,
                     it.metadata.token,

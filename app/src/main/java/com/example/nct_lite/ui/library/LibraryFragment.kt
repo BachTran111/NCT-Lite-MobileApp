@@ -72,7 +72,7 @@ class LibraryFragment : Fragment() {
             (activity as? MainActivity)?.openSettings()
         }
         binding.btnEditProfile.setOnClickListener {
-            Toast.makeText(requireContext(), "Chức năng đang phát triển", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Coming soon!", Toast.LENGTH_SHORT).show()
         }
         binding.btnCreatePlaylist.setOnClickListener {
             (activity as? MainActivity)?.showNewPlaylistSheet()
@@ -89,7 +89,7 @@ class LibraryFragment : Fragment() {
                 updateLibraryAdapter()
             }
             result.onFailure {
-                Toast.makeText(requireContext(), "Lỗi tải playlist của bạn", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed to load playlists", Toast.LENGTH_SHORT).show()
             }
         }
 

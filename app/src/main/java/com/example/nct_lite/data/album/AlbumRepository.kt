@@ -58,7 +58,7 @@ class AlbumRepository(
     }
     suspend fun updateAlbum(id: String, req: AlbumUpdateRequest): Result<AlbumResponse> {
         return try {
-            val res = remote.updateAlbum(id, req) // Đảm bảo RemoteDataSource đã gọi API tương ứng
+            val res = remote.updateAlbum(id, req)
 
             if (res.isSuccessful && res.body() != null) {
                 Result.success(res.body()!!)

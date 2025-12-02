@@ -25,7 +25,6 @@ class BottomSheetSelectedFragment : BottomSheetDialogFragment() {
         val song = arguments?.getSerializable(ARG_SONG) as? SongMetadata
 
         view.findViewById<View>(R.id.action_add_to_playlist)?.setOnClickListener {
-            // Thay vì đi qua một BottomSheet trung gian, gọi thẳng chức năng tạo playlist mới
 //            if (activity is MainActivity) {
 //                (activity as MainActivity).showNewPlaylistSheet()
 //            }
@@ -33,8 +32,6 @@ class BottomSheetSelectedFragment : BottomSheetDialogFragment() {
 //                (activity as MainActivity).showAddToPlaylist()
 //            }
             song?.let { currentSong ->
-                // Mở màn hình chọn Playlist và TRUYỀN ID BÀI HÁT VÀO
-                // Lưu ý: currentSong.id hoặc currentSong._id tùy vào DataClass của bạn
                 val addToPlaylistSheet = AddToPlaylistBottomSheetFragment.newInstance(currentSong._id)
                 addToPlaylistSheet.show(parentFragmentManager, AddToPlaylistBottomSheetFragment.TAG)
             }

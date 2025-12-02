@@ -51,10 +51,10 @@ class AdminPreviewFragment : Fragment() {
 
         viewModel.actionResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
-                Toast.makeText(requireContext(), "Thao tác thành công", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Successed to action", Toast.LENGTH_SHORT).show()
             }
             result.onFailure {
-                Toast.makeText(requireContext(), it.message ?: "Thao tác thất bại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), it.message ?: "Failed to action", Toast.LENGTH_SHORT).show()
             }
         }
 

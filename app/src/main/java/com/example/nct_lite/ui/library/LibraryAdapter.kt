@@ -31,12 +31,12 @@ class LibraryAdapter(
         items.clear()
 
         if (myAlbums.isNotEmpty()) {
-            items.add(LibraryItem.Header("Playlist của tôi")) // Thêm tiêu đề
+            items.add(LibraryItem.Header("My playlist")) // Thêm tiêu đề
             items.addAll(myAlbums.map { LibraryItem.Album(it) }) // Thêm list album
         }
 
         if (savedAlbums.isNotEmpty()) {
-            items.add(LibraryItem.Header("Playlist đã lưu")) // Thêm tiêu đề
+            items.add(LibraryItem.Header("Saved playlist ")) // Thêm tiêu đề
             items.addAll(savedAlbums.map { LibraryItem.Album(it) }) // Thêm list album
         }
 
@@ -58,7 +58,6 @@ class LibraryAdapter(
                 HeaderViewHolder(view)
             }
             else -> {
-                // Layout item_playlist bạn đã làm ở bước trước
                 val view = inflater.inflate(R.layout.item_playlist, parent, false)
                 AlbumViewHolder(view)
             }

@@ -69,7 +69,7 @@ class UserUploadMusicActivity : AppCompatActivity() {
         binding.btnUpload.setOnClickListener { uploadSong() }
         binding.edtCategory.setOnClickListener {
             if (allGenres.isNotEmpty()) showGenreSelectionDialog()
-            else Toast.makeText(this, "Đang tải danh sách thể loại...", Toast.LENGTH_SHORT).show()
+            else Toast.makeText(this, "Loading genres...", Toast.LENGTH_SHORT).show()
         }
         binding.btnPickCover.setOnLongClickListener {
             clearFields()
@@ -82,7 +82,7 @@ class UserUploadMusicActivity : AppCompatActivity() {
             result.onSuccess { response ->
                 allGenres = response.metadata
             }.onFailure {
-                Toast.makeText(this, "Không thể tải danh sách thể loại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Not to load genres", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -109,7 +109,7 @@ class UserUploadMusicActivity : AppCompatActivity() {
 
 //        if (title.isEmpty() || artist.isEmpty() || genreIds.isEmpty() || audio == null || cover == null) {
         if (title.isEmpty() || artist.isEmpty() || selectedGenreIds.isEmpty() || audio == null || cover == null) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin và chọn file", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT)
                 .show()
             return
         }
@@ -133,10 +133,10 @@ class UserUploadMusicActivity : AppCompatActivity() {
             }
 //            binding.btnUpload.isEnabled = true
             result.onSuccess {
-                Toast.makeText(this@UserUploadMusicActivity, "Upload thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@UserUploadMusicActivity, "Upload success!", Toast.LENGTH_SHORT).show()
                 finish()
             }.onFailure {
-                Toast.makeText(this@UserUploadMusicActivity, it.message ?: "Upload thất bại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@UserUploadMusicActivity, it.message ?: "Upload error", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -170,7 +170,7 @@ class UserUploadMusicActivity : AppCompatActivity() {
         val checkedItems = allGenres.map { selectedGenreIds.contains(it._id) }.toBooleanArray()
 
         AlertDialog.Builder(this)
-            .setTitle("Chọn thể loại")
+            .setTitle("Choose genre")
             .setMultiChoiceItems(genreNames, checkedItems) { _, which, isChecked ->
                 val selectedGenre = allGenres[which]
                 if (isChecked) {
@@ -187,7 +187,7 @@ class UserUploadMusicActivity : AppCompatActivity() {
                     .map { it.name }
                 binding.edtCategory.setText(selectedNames.joinToString(", "))
             }
-            .setNegativeButton("Hủy", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
 }

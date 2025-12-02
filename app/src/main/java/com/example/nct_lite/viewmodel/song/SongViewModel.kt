@@ -12,23 +12,18 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class SongViewModel(
-    // Nếu bạn đã làm Singleton cho Repo thì nên sửa thành: = SongRepository.getInstance()
     private val repo: SongRepository = SongRepository()
 ) : ViewModel() {
 
-    // LiveData cho HomeFragment (tất cả bài hát)
     private val _songs = MutableLiveData<Result<SongListResponse>>()
     val songs: LiveData<Result<SongListResponse>> get() = _songs
 
-    // LiveData cho chi tiết bài hát
     private val _songDetail = MutableLiveData<Result<SongResponse>>()
     val songDetail: LiveData<Result<SongResponse>> get() = _songDetail
 
-    // LiveData cho kết quả tìm kiếm
     private val _searchResult = MutableLiveData<Result<SongListResponse>?>()
     val searchResult: LiveData<Result<SongListResponse>?> get() = _searchResult
 
-    // LiveData cho Playlist (Load danh sách theo ID)
     private val _playlistSongs = MutableLiveData<Result<SongListResponse>>()
     val playlistSongs: LiveData<Result<SongListResponse>> = _playlistSongs
 

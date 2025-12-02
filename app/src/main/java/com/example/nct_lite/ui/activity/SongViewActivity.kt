@@ -99,7 +99,7 @@ class SongViewActivity : AppCompatActivity() {
                 bindSong(response.metadata)
             }
             result.onFailure {
-                Toast.makeText(this, "Không tải được chi tiết bài hát", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Not to load song", Toast.LENGTH_SHORT).show()
             }
         }
     }

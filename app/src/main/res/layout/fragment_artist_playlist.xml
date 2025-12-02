@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnBack"
-        tools:text="Playlist của Nghệ sĩ" />
+        tools:text="Artist playlist" />
 
     <ProgressBar
         android:id="@+id/progressBar"

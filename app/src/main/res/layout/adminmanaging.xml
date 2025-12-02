@@ -17,7 +17,7 @@
         android:background="@drawable/bg_search_bar"
         android:drawableEnd="@drawable/search_24dp_1f1f1f_fill0_wght400_grad0_opsz24"
         android:drawablePadding="12dp"
-        android:hint="Nhập tên bài hát"
+        android:hint="Enter song name"
         android:inputType="text"
         android:padding="12dp"
         android:textColor="#FFFFFF"

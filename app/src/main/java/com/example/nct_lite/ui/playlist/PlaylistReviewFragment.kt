@@ -60,7 +60,7 @@ class PlaylistReviewFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
         binding.btnPlay.setOnClickListener {
-            Toast.makeText(requireContext(), "Chức năng phát tất cả đang phát triển", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -74,23 +74,22 @@ class PlaylistReviewFragment : Fragment() {
                 renderSongsList(songs)
 
             }.onFailure {
-                Toast.makeText(context, "Lỗi tải dữ liệu: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Failed to load data: ${it.message}", Toast.LENGTH_SHORT).show()
             }
         }
         albumViewModel.updateAlbumResult.observe(viewLifecycleOwner) { result ->
-            if (result == null) return@observe // Đã xử lý xong thì bỏ qua
+            if (result == null) return@observe
 
             binding.progressBar.visibility = View.GONE
 
             result.onSuccess {
-                Toast.makeText(context, "Đã xóa album thành công", Toast.LENGTH_SHORT).show()
-                albumViewModel.resetStatus() // Reset trạng thái LiveData
+                Toast.makeText(context, "Success to delete album", Toast.LENGTH_SHORT).show()
+                albumViewModel.resetStatus()
 
-                // Xóa xong thì quay về màn hình trước (Thư viện)
                 requireActivity().onBackPressedDispatcher.onBackPressed()
 
             }.onFailure {
-                Toast.makeText(context, "Lỗi xóa album: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error to delete album: ${it.message}", Toast.LENGTH_SHORT).show()
                 albumViewModel.resetStatus()
             }
         }
@@ -98,13 +97,13 @@ class PlaylistReviewFragment : Fragment() {
             if (result == null) return@observe
             binding.progressBar.visibility = View.GONE
             result.onSuccess {
-                Toast.makeText(context, "Cập nhật thông tin thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Success to update album!", Toast.LENGTH_SHORT).show()
                 albumViewModel.resetStatus()
                 albumId?.let { id ->
                     albumViewModel.getAlbumById(id)
                 }
             }.onFailure {
-                Toast.makeText(context, "Cập nhật thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Failed to update album: ${it.message}", Toast.LENGTH_SHORT).show()
                 albumViewModel.resetStatus()
             }
         }
@@ -150,7 +149,7 @@ class PlaylistReviewFragment : Fragment() {
     }
     private fun showSongOptions(song: SongMetadata, anchorView: View) {
         val popup = androidx.appcompat.widget.PopupMenu(requireContext(), anchorView)
-        popup.menu.add(0, 1, 0, "Xóa khỏi Playlist")
+        popup.menu.add(0, 1, 0, "Delete from Playlist")
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 1 -> {
@@ -166,9 +165,9 @@ class PlaylistReviewFragment : Fragment() {
 
     private fun confirmRemoveSong(song: SongMetadata) {
         androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setTitle("Xóa bài hát")
-            .setMessage("Bạn có chắc muốn xóa bài '${song.title}' khỏi playlist này?")
-            .setPositiveButton("Xóa") { _, _ ->
+            .setTitle("Delete song from playlist")
+            .setMessage("Do you want to remove '${song.title}' from this playlist?")
+            .setPositiveButton("Delete") { _, _ ->
                 // Gọi ViewModel để xóa
                 val currentAlbumId = albumId
                 if (currentAlbumId != null) {
@@ -177,13 +176,13 @@ class PlaylistReviewFragment : Fragment() {
                     albumViewModel.moveSongFromAlbum(currentAlbumId, song._id)
                 }
             }
-            .setNegativeButton("Hủy", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
     private fun showAlbumOptions(anchor: View, album: AlbumMetadata) {
         val popup = androidx.appcompat.widget.PopupMenu(requireContext(), anchor)
-        popup.menu.add(0, 1, 0, "Chỉnh sửa thông tin")
-        popup.menu.add(0, 2, 1, "Xóa Album")
+        popup.menu.add(0, 1, 0, "Edit information")
+        popup.menu.add(0, 2, 1, "Delete Album")
 
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -205,12 +204,12 @@ class PlaylistReviewFragment : Fragment() {
     // 2. Hiển thị Dialog Xóa
     private fun showConfirmDeleteDialog(album: AlbumMetadata) {
         androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setTitle("Xóa Album")
-            .setMessage("Bạn có chắc chắn muốn xóa album '${album.title}' không? Hành động này không thể hoàn tác.")
-            .setPositiveButton("Xóa") { _, _ ->
+            .setTitle("Delete Album")
+            .setMessage("Do you want to delete album '${album.title}' No? This action cannot be undone.")
+            .setPositiveButton("Delete") { _, _ ->
                 albumViewModel.deleteAlbum(album.id)
             }
-            .setNegativeButton("Hủy", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
     private fun showEditAlbumDialog(album: AlbumMetadata) {
@@ -221,9 +220,9 @@ class PlaylistReviewFragment : Fragment() {
         etTitle.setText(album.title)
         etDesc.setText(album.description ?: "")
         androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setTitle("Chỉnh sửa thông tin")
+            .setTitle("Edit information")
             .setView(dialogView)
-            .setPositiveButton("Lưu") { _, _ ->
+            .setPositiveButton("Save") { _, _ ->
                 val newTitle = etTitle.text.toString().trim()
                 val newDesc = etDesc.text.toString().trim()
                 if (newTitle.isNotEmpty()) {
@@ -231,16 +230,16 @@ class PlaylistReviewFragment : Fragment() {
                     albumViewModel.updateAlbum(
                         albumId = album.id,
                         title = newTitle,
-                        artist = album.artist ?: "", // Giữ nguyên
-                        description = newDesc,       // Giá trị mới
-                        coverUrl = album.coverUrl ?: "", // Giữ nguyên
-                        isPublic = album.isPublic      // Giữ nguyên
+                        artist = album.artist ?: "",
+                        description = newDesc,
+                        coverUrl = album.coverUrl ?: "",
+                        isPublic = album.isPublic
                     )
                 } else {
-                    Toast.makeText(context, "Tên album không được để trống", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("Hủy", null) // Đóng dialog không làm gì
+            .setNegativeButton("Cancel", null)
             .show()
     }
     companion object {

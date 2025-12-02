@@ -18,7 +18,6 @@ class SimplePlaylistAdapter (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // Tái sử dụng layout item_playlist có sẵn hoặc tạo layout đơn giản mới
         val binding = ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
@@ -32,8 +31,6 @@ class SimplePlaylistAdapter (
     inner class ViewHolder(private val binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(album: AlbumMetadata) {
             binding.playlistName.text = album.title
-            // binding.playlistImage... (Load ảnh nếu cần)
-
             binding.root.setOnClickListener { onItemClick(album) }
         }
     }

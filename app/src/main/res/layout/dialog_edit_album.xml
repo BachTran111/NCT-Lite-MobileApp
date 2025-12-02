@@ -8,7 +8,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tên Album">
+        android:hint="Album Title">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etAlbumTitle"
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="Mô tả">
+        android:hint="Description">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etAlbumDesc"

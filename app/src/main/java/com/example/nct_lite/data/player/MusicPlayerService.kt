@@ -86,12 +86,12 @@ class MusicPlayerService : Service() {
 
 fun play(url: String, title: String, artist: String, cover: String) {
     try {
-        mediaPlayer.reset()                 // quay về Idle
-        mediaPlayer.setDataSource(url)      // -> Initialized
-        mediaPlayer.prepareAsync()          // -> Async preparing
+        mediaPlayer.reset()
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
 
         mediaPlayer.setOnPreparedListener {
-            it.start()                      // ✅ CHỈ start TRONG onPrepared
+            it.start()
             _state.value = PlayerState(
                 isPlaying = true,
                 title = title,
@@ -161,7 +161,7 @@ fun play(url: String, title: String, artist: String, cover: String) {
     private fun updateNotification(state: PlayerState) {
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = buildNotification(state)
-        manager.notify(notificationId, notification)
+//        manager.notify(notificationId, notification)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && state.isPlaying) {
             startForeground(notificationId, notification)
         }

@@ -24,7 +24,6 @@ class ItemPlaylistSongAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // Sử dụng layout item_playlist_song.xml của bạn
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_playlist_song, parent, false)
         return ViewHolder(view)

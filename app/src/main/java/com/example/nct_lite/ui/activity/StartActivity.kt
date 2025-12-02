@@ -22,7 +22,6 @@ class StartActivity : AppCompatActivity() {
         binding = StartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Nếu đã có token lưu sẵn thì bỏ qua màn đăng nhập
         val savedToken = com.example.nct_lite.data.SessionManager.getToken(this)
         val savedRole = com.example.nct_lite.data.SessionManager.getRole(this)
         if (!savedToken.isNullOrEmpty() && !savedRole.isNullOrEmpty()) {
@@ -36,7 +35,6 @@ class StartActivity : AppCompatActivity() {
             return
         }
 
-        // Pre-fill tài khoản test: admin/admin
 //        binding.editUsername.setText("admin")
 //        binding.editPassword.setText("admin")
 
@@ -47,7 +45,7 @@ class StartActivity : AppCompatActivity() {
             val password = binding.editPassword.text.toString().trim()
 
             if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -63,7 +61,7 @@ class StartActivity : AppCompatActivity() {
     private fun observeLoginResponse() {
         authViewModel.authResponse.observe(this) { result ->
             result.onSuccess {
-                Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Login success!", Toast.LENGTH_SHORT).show()
                 com.example.nct_lite.data.SessionManager.saveAuth(
                     this,
                     it.metadata.token,
@@ -77,7 +75,7 @@ class StartActivity : AppCompatActivity() {
             }
 
             result.onFailure { e ->
-                Toast.makeText(this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show()
             }
         }
     }

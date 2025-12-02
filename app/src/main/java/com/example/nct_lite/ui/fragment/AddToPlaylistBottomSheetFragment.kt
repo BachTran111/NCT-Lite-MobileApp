@@ -18,8 +18,6 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: BottomSheetAddToPlaylistBinding? = null
     private val binding get() = _binding!!
-
-    // Dùng chung ViewModel với Activity
     private val albumViewModel: AlbumViewModel by activityViewModels { AlbumViewModelFactory() }
 
     private var targetSongId: String? = null
@@ -27,7 +25,6 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Lấy ID bài hát được truyền vào
         targetSongId = arguments?.getString(ARG_SONG_ID)
     }
 
@@ -42,7 +39,6 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Nếu không có ID bài hát thì đóng luôn
         if (targetSongId == null) {
             dismiss()
             return
@@ -52,16 +48,13 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
         setupListeners()
         observeData()
 
-        // Tải danh sách album của tôi để hiển thị
         binding.progressBar.visibility = View.VISIBLE
         albumViewModel.getMyOwnAlbum()
     }
 
     private fun setupRecyclerView() {
         adapter = SimplePlaylistAdapter { selectedAlbum ->
-            // --- KHI CHỌN 1 ALBUM -> GỌI API THÊM BÀI HÁT ---
             binding.progressBar.visibility = View.VISIBLE
-            // Gọi hàm trong ViewModel (đảm bảo ViewModel đã có hàm này gọi Repo)
             albumViewModel.addSongToAlbum(selectedAlbum.id, targetSongId!!)
         }
 
@@ -73,7 +66,6 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun setupListeners() {
         binding.btnNewPlaylist.setOnClickListener {
-            // Mở màn hình tạo playlist mới
             NewPlaylistBottomSheetFragment().show(parentFragmentManager, "NewPlaylistBottomSheet")
         }
     }
@@ -112,7 +104,6 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
         const val TAG = "AddToPlaylistBottomSheetFragment"
         private const val ARG_SONG_ID = "song_id"
 
-        // Hàm tạo Fragment kèm ID bài hát
         fun newInstance(songId: String) = AddToPlaylistBottomSheetFragment().apply {
             arguments = Bundle().apply { putString(ARG_SONG_ID, songId) }
         }
