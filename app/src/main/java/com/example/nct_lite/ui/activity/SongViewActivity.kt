@@ -31,6 +31,8 @@ class SongViewActivity : AppCompatActivity() {
     private lateinit var songTitle: TextView
     private lateinit var artistName: TextView
     private lateinit var progressBar: SeekBar
+    private lateinit var tvCurrentTime: TextView
+    private lateinit var tvTotalTime: TextView
     private lateinit var btnShuffle: ImageButton
     private lateinit var btnPrev: ImageButton
     private lateinit var btnPlay: ImageButton
@@ -39,7 +41,7 @@ class SongViewActivity : AppCompatActivity() {
     private lateinit var btnBack: ImageButton
     private var currentSong: SongMetadata? = null
 
-
+    private var isDragging = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.song_view)
@@ -47,6 +49,7 @@ class SongViewActivity : AppCompatActivity() {
         bindViews()
         observeSongDetail()
         observePlayerState()
+        setupSeekBar()
 
         val songId = intent.getStringExtra(EXTRA_SONG_ID)
         val fallbackTitle = intent.getStringExtra(EXTRA_SONG_TITLE)
@@ -69,6 +72,8 @@ class SongViewActivity : AppCompatActivity() {
         songTitle = findViewById(R.id.song_title)
         artistName = findViewById(R.id.artist_name)
         progressBar = findViewById(R.id.progress_bar)
+        tvCurrentTime = findViewById(R.id.tvCurrentTime)
+        tvTotalTime = findViewById(R.id.tvTotalTime)
 
         btnShuffle = findViewById(R.id.btn_shuffle)
         btnPrev = findViewById(R.id.btn_prev)
@@ -136,20 +141,61 @@ class SongViewActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 playerVM.playerState.collect { state ->
+                    // 1. Cập nhật nút Play/Pause
                     btnPlay.setImageResource(
                         if (state.isPlaying) R.drawable.ic_pause_around else R.drawable.ic_play_around
                     )
 
+                    // 2. Cập nhật thông tin bài hát (nếu chưa có)
                     if (currentSong == null && state.title.isNotEmpty()) {
                         songTitle.text = state.title
                         artistName.text = state.artist
                         loadCover(state.coverUrl)
                     }
+
+                    // 3. Cập nhật Tổng thời gian (Max của SeekBar)
+                    if (state.duration > 0) {
+                        progressBar.max = state.duration
+                        tvTotalTime.text = formatTime(state.duration)
+                    }
+
+                    // 4. Cập nhật Tiến độ chạy (Chỉ khi KHÔNG kéo)
+                    if (!isDragging) {
+                        progressBar.progress = state.currentPosition
+                        tvCurrentTime.text = formatTime(state.currentPosition)
+                    }
                 }
             }
         }
     }
+    private fun setupSeekBar() {
+        progressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                // Nếu người dùng đang kéo -> Cập nhật số giây text ngay lập tức cho mượt
+                if (fromUser) {
+                    tvCurrentTime.text = formatTime(progress)
+                }
+            }
 
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                isDragging = true // Đánh dấu đang kéo -> Dừng cập nhật tự động
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                isDragging = false // Thả tay ra -> Tiếp tục cập nhật
+                seekBar?.let {
+                    // Gửi lệnh Seek tới ViewModel/Service
+                    playerVM.seekTo(it.progress)
+                }
+            }
+        })
+    }
+    private fun formatTime(millis: Int): String {
+        val seconds = (millis / 1000) % 60
+        val minutes = (millis / (1000 * 60)) % 60
+        return String.format("%02d:%02d", minutes, seconds)
+    }
     companion object {
         private const val EXTRA_SONG_ID = "extra_song_id"
         private const val EXTRA_SONG_TITLE = "extra_song_title"

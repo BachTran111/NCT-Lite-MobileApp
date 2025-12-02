@@ -119,6 +119,6 @@ class AlbumViewModel(
         _updateAlbumResult.value = null
     }
     fun resetAddSongResult(){
-        _resetAddSongResult.value = null
+        _addSongResult.value = null
     }
 }

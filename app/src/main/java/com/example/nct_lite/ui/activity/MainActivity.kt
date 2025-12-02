@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -39,7 +40,7 @@ open class MainActivity : AppCompatActivity() {
 
     private val playerVM: PlayerViewModel by viewModels()
     private var userRole: String? = null
-
+    private lateinit var progressBarMusic: ProgressBar
     private lateinit var ivCover: ImageView
     private lateinit var tvTitle: TextView
     private lateinit var tvArtist: TextView
@@ -66,6 +67,7 @@ open class MainActivity : AppCompatActivity() {
         tvTitle = musicBar.findViewById<TextView>(R.id.tvTitle)
         btnPause = musicBar.findViewById<ImageButton>(R.id.btnPause)
         tvArtist = musicBar.findViewById(R.id.tvArtist)
+        progressBarMusic = musicBar.findViewById(R.id.progressBarMusic)
 
         musicBar.setOnClickListener {
             val state = playerVM.playerState.value
@@ -112,6 +114,13 @@ open class MainActivity : AppCompatActivity() {
                             .into(ivCover)
                     } else {
                         ivCover.setImageResource(R.drawable.ic_avatar_foreground)
+                    }
+                    if (state.duration > 0) {
+                        progressBarMusic.max = state.duration
+
+                        // Để thanh chạy mượt hơn trên các bản Android mới, có thể dùng setProgress(value, animate)
+                        // Nhưng setProgress(value) là đủ dùng
+                        progressBarMusic.progress = state.currentPosition
                     }
                 }
             }

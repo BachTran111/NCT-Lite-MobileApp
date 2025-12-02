@@ -56,6 +56,10 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         musicService?.pauseOrResume()
     }
 
+    fun seekTo(position: Int) {
+        musicService?.seekTo(position)
+    }
+
     override fun onCleared() {
         super.onCleared()
         app.unbindService(serviceConnection)
