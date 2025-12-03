@@ -1,6 +1,9 @@
 package com.example.nct_lite.ui.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -230,5 +233,33 @@ open class MainActivity : AppCompatActivity() {
 
     fun showNewPlaylistSheet() {
         NewPlaylistBottomSheetFragment().show(supportFragmentManager, "NewPlaylistSheet")
+    }
+    // Đăng ký BroadcastReceiver trong MainActivity
+    private val songCompletionReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "ACTION_SONG_COMPLETED") {
+                playerVM.skipNext() // Tự động Next bài
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val filter = IntentFilter("ACTION_SONG_COMPLETED")
+        // Lưu ý: Với Android 12+, nên thêm flag RECEIVER_NOT_EXPORTED
+//        registerReceiver(songCompletionReceiver, filter, RECEIVER_NOT_EXPORTED)
+        // KIỂM TRA PHIÊN BẢN ANDROID ĐỂ GẮN CỜ PHÙ HỢP
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            // Android 13 (API 33) trở lên: Bắt buộc phải có cờ này
+            registerReceiver(songCompletionReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            // Android 12 trở xuống: Không cần cờ (hoặc dùng hàm cũ)
+//            registerReceiver(songCompletionReceiver, filter,RECEIVER_EXPORTED)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(songCompletionReceiver)
     }
 }

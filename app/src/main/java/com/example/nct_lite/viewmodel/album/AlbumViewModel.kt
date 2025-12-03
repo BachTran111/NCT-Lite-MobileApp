@@ -37,6 +37,23 @@ class AlbumViewModel(
     val publicAlbums: LiveData<Result<AlbumListResponse>> = _publicAlbums
     private val _savedAlbums = MutableLiveData<Result<AlbumListResponse>>()
     val savedAlbums: LiveData<Result<AlbumListResponse>> = _savedAlbums
+    private val _saveAlbumResult = MutableLiveData<Result<Boolean>?>()
+    val saveAlbumResult: LiveData<Result<Boolean>?> = _saveAlbumResult
+
+    fun save(albumId: String) {
+        viewModelScope.launch {
+            try {
+                val result = repo.saveAlbum(albumId)
+                if (result.isSuccess) {
+                    _saveAlbumResult.postValue(Result.success(true)) // true = saved
+                } else {
+                    _saveAlbumResult.postValue(Result.failure(result.exceptionOrNull() ?: Exception("Save failed")))
+                }
+            } catch (e: Exception) {
+                _saveAlbumResult.postValue(Result.failure(e))
+            }
+        }
+    }
     fun createAlbum(
         title: RequestBody,
         description: RequestBody?,
@@ -45,6 +62,21 @@ class AlbumViewModel(
     ) {
         viewModelScope.launch {
             createAlbumResult.postValue(repo.createAlbum( title, description, isPublic, cover))
+        }
+    }
+    fun unsave(albumId: String) {
+        viewModelScope.launch {
+            try {
+                val result = repo.unsaveAlbum(albumId)
+                if (result.isSuccess) {
+                    _saveAlbumResult.postValue(Result.success(false))
+                    getSavedAlbums()
+                } else {
+                    _saveAlbumResult.postValue(Result.failure(result.exceptionOrNull() ?: Exception("Unsave failed")))
+                }
+            } catch (e: Exception) {
+                _saveAlbumResult.postValue(Result.failure(e))
+            }
         }
     }
     fun updateAlbum(
@@ -83,11 +115,15 @@ class AlbumViewModel(
             _myAlbums.postValue(repo.getMyOwnAlbum())
         }
     }
-    fun getSavedAlbum(){
+    fun getSavedAlbums() {
         viewModelScope.launch {
-            _savedAlbums.postValue(repo.getSavedAlbums())
-        }
-    }
+            try {
+                val response = repo.getSavedAlbums()
+                _savedAlbums.postValue(response)
+            } catch (e: Exception) {
+                _savedAlbums.postValue(Result.failure(e))
+            }
+        }}
 
     fun getAllAlbums() {
         viewModelScope.launch {
@@ -122,3 +158,4 @@ class AlbumViewModel(
         _addSongResult.value = null
     }
 }
+

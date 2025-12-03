@@ -50,7 +50,7 @@ class LibraryFragment : Fragment() {
         setupActions()
         observeData()
         albumViewModel.getMyOwnAlbum()
-        albumViewModel.getSavedAlbum()
+        albumViewModel.getSavedAlbums()
 
         songViewModel.loadAllSongs()
         genreViewModel.getGenres()

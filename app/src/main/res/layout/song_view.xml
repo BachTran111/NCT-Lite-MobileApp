@@ -6,18 +6,38 @@
     android:orientation="vertical"
     android:background="@drawable/bg_red_brown"
     android:padding="16dp">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/outline_arrow_back_ios_new_24"
-        app:tint="#ffffff"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/outline_arrow_back_ios_new_24"
+            app:tint="#ffffff" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/imvQueue"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_category"
+            android:scaleType="centerInside"
+            app:tint="#ffffff" />
+
+    </LinearLayout>
     <!-- Album and title -->
     <TextView
         android:id="@+id/album_title"

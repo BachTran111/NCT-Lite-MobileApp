@@ -1,7 +1,9 @@
 package com.example.nct_lite.data.song
 
+import androidx.lifecycle.MutableLiveData
 import com.example.nct_lite.data.ApiClient
 import com.example.nct_lite.data.song.response.SongListResponse
+import com.example.nct_lite.data.song.response.SongMetadata
 import com.example.nct_lite.data.song.response.SongResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -9,7 +11,42 @@ import okhttp3.RequestBody
 class SongRepository(
     private val remote: SongRemoteDataSource = SongRemoteDataSource(ApiClient.songApi)
 ) {
+    private var currentQueue: List<SongMetadata> = emptyList()
+    private var currentIndex: Int = -1
 
+    val currentSong = MutableLiveData<SongMetadata?>()
+    fun setPlaylist(songs: List<SongMetadata>, initialSongId: String) {
+        currentQueue = songs
+        currentIndex = songs.indexOfFirst { it._id == initialSongId }
+        if (currentIndex != -1) {
+            currentSong.postValue(currentQueue[currentIndex])
+        }
+    }
+    fun getNextSong(): SongMetadata? {
+        if (currentQueue.isEmpty()) return null
+
+        currentIndex = (currentIndex + 1) % currentQueue.size
+
+        val next = currentQueue[currentIndex]
+        currentSong.postValue(next)
+        return next
+    }
+    fun getPreviousSong(): SongMetadata? {
+        if (currentQueue.isEmpty()) return null
+
+        currentIndex = if (currentIndex - 1 < 0) currentQueue.size - 1 else currentIndex - 1
+
+        val prev = currentQueue[currentIndex]
+        currentSong.postValue(prev)
+        return prev
+    }
+    fun getQueue(): List<SongMetadata> = currentQueue
+    fun getCurrentSong(): SongMetadata? {
+        if (currentIndex != -1 && currentQueue.isNotEmpty()) {
+            return currentQueue[currentIndex]
+        }
+        return null
+    }
     suspend fun getAllSongs(): Result<SongListResponse> {
         return try {
             val res = remote.getAllSongs()
@@ -127,13 +164,23 @@ class SongRepository(
             Result.failure(e)
         }
     }
+//    companion object {
+//        private var instance: SongRepository? = null
+//        fun getInstance(): SongRepository {
+//            if (instance == null) {
+//                instance = SongRepository()
+//            }
+//            return instance!!
+//        }
+//    }
     companion object {
+        @Volatile
         private var instance: SongRepository? = null
+
         fun getInstance(): SongRepository {
-            if (instance == null) {
-                instance = SongRepository()
+            return instance ?: synchronized(this) {
+                instance ?: SongRepository().also { instance = it }
             }
-            return instance!!
         }
     }
 }

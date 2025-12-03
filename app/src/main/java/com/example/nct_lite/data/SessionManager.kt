@@ -25,4 +25,8 @@ object SessionManager {
     fun clear(context: Context) {
         prefs(context).edit().clear().apply()
     }
+    fun getUserId(context: Context): String? {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        return prefs.getString("USER_ID", null)
+    }
 }

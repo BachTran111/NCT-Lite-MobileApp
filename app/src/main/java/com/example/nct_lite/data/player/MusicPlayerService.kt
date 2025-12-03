@@ -47,6 +47,8 @@ class MusicPlayerService : Service() {
             setOnCompletionListener {
                 _state.value = _state.value.copy(isPlaying = false, currentPosition = 0)
                 stopProgressUpdates()
+                val intent = Intent("ACTION_SONG_COMPLETED")
+                sendBroadcast(intent)
             }
         }
     }
