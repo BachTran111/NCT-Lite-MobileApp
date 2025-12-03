@@ -82,7 +82,7 @@ class UserUploadMusicActivity : AppCompatActivity() {
             result.onSuccess { response ->
                 allGenres = response.metadata
             }.onFailure {
-                Toast.makeText(this, "Not to load genres", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Failed to load genres", Toast.LENGTH_SHORT).show()
             }
         }
     }

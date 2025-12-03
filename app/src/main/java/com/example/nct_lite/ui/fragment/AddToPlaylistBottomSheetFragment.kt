@@ -38,6 +38,7 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        albumViewModel.resetAddSongResult()
 
         if (targetSongId == null) {
             dismiss()
@@ -76,7 +77,7 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
             result.onSuccess { response ->
                 adapter.submitList(response.metadata)
             }.onFailure {
-                Toast.makeText(context, "Lỗi tải playlist", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Failed to load playlist", Toast.LENGTH_SHORT).show()
             }
         }
         albumViewModel.addSongResult.observe(viewLifecycleOwner) { result ->
@@ -85,11 +86,11 @@ class AddToPlaylistBottomSheetFragment : BottomSheetDialogFragment() {
             binding.progressBar.visibility = View.GONE
 
             result.onSuccess {
-                Toast.makeText(context, "Đã thêm vào playlist thành công!", Toast.LENGTH_SHORT).show()
-                albumViewModel.resetAddSongResult // Reset để lần sau dùng tiếp
-                dismiss() // Đóng BottomSheet này lại
+                Toast.makeText(context, "Success to add song to playlist!", Toast.LENGTH_SHORT).show()
+                albumViewModel.resetAddSongResult
+                dismiss()
             }.onFailure {
-                Toast.makeText(context, "Thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Failed: ${it.message}", Toast.LENGTH_SHORT).show()
                 albumViewModel.resetAddSongResult
             }
         }

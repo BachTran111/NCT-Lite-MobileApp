@@ -2,6 +2,8 @@ package com.example.nct_lite.data.album
 
 import com.example.nct_lite.data.album.request.AlbumCreateRequest
 import com.example.nct_lite.data.album.request.AlbumUpdateRequest
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class AlbumRemoteDataSource(private val albumApi: AlbumApi) {
 
@@ -10,9 +12,15 @@ class AlbumRemoteDataSource(private val albumApi: AlbumApi) {
     suspend fun getAlbumById(id: String) = albumApi.getAlbumById(id)
 
     suspend fun createAlbum(
-        albumCreateRequest: AlbumCreateRequest
+        title: RequestBody,
+        description: RequestBody?,
+        isPublic: RequestBody?,
+        cover: MultipartBody.Part?
     ) = albumApi.createAlbum(
-        albumCreateRequest = albumCreateRequest
+        title = title,
+        description = description,
+        isPublic = isPublic,
+        cover = cover
     )
     suspend fun updateAlbum(
         albumId: String,

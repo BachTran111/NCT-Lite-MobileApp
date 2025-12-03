@@ -51,7 +51,9 @@ data class AlbumMetadata(
     val artist: String?,
 
     @SerializedName("songIDs")
-    val songIDs: List<SongMetadata> = emptyList(),
+    val songIDs: @RawValue List<Any>? = null,
+//    val songIDs: List<SongMetadata> = emptyList(),
+
 
     @SerializedName("genreIDs")
     val genreIDs: List<Genre> = emptyList(),

@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nct_lite.R
+import com.example.nct_lite.data.SessionManager
 import com.example.nct_lite.data.album.response.AlbumMetadata
+import com.example.nct_lite.data.song.SongRepository
 import com.example.nct_lite.data.song.response.SongMetadata
 import com.example.nct_lite.databinding.PlaylistReviewBinding
 import com.example.nct_lite.ui.activity.SongViewActivity
@@ -29,8 +32,9 @@ class PlaylistReviewFragment : Fragment() {
 
     private var albumId: String? = null
     private var currentAlbum: AlbumMetadata? = null
-
-
+    private var currentAlbumSongs: List<SongMetadata> = emptyList()
+    private var isAlbumSaved = false
+    private lateinit var btnHeart: ImageView // Khai báo biến view
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         albumId = arguments?.getString(ARG_ALBUM_ID)
@@ -46,10 +50,10 @@ class PlaylistReviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        btnHeart = view.findViewById(R.id.btnHeart)
         setupActions()
         observeData()
-
+        albumViewModel.getSavedAlbums()
         albumId?.let { id ->
             albumViewModel.getAlbumById(id)
         }
@@ -60,7 +64,29 @@ class PlaylistReviewFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
         binding.btnPlay.setOnClickListener {
-            Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
+            if (currentAlbumSongs.isNotEmpty()) {
+                val firstSong = currentAlbumSongs[0]
+
+                SongRepository.getInstance()
+                    .setPlaylist(currentAlbumSongs, firstSong._id)
+                context?.let { ctx ->
+                    startActivity(SongViewActivity.createIntent(ctx, firstSong))
+                }
+            } else {
+                Toast.makeText(requireContext(), "This album has no songs", Toast.LENGTH_SHORT).show()
+            }
+        }
+        btnHeart.setOnClickListener {
+            val id = albumId ?: return@setOnClickListener
+
+            // Disable tạm để tránh bấm liên tục
+            btnHeart.isEnabled = false
+
+            if (isAlbumSaved) {
+                albumViewModel.unsave(id)
+            } else {
+                albumViewModel.save(id)
+            }
         }
     }
 
@@ -69,43 +95,83 @@ class PlaylistReviewFragment : Fragment() {
             result.onSuccess { response ->
                 val album = response.metadata.album
                 currentAlbum = album
+                checkOwnerAndSetupHeart(album)
                 renderAlbumInfo(album)
                 val songs = response.metadata.songs
+                currentAlbumSongs = songs
                 renderSongsList(songs)
-
             }.onFailure {
                 Toast.makeText(context, "Failed to load data: ${it.message}", Toast.LENGTH_SHORT).show()
             }
         }
-        albumViewModel.updateAlbumResult.observe(viewLifecycleOwner) { result ->
+
+        albumViewModel.savedAlbums.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { response ->
+                val mySavedList = response.metadata
+                albumId?.let { currentId ->
+                    isAlbumSaved = mySavedList.any { it.id == currentId }
+                    updateHeartUI()
+                }
+            }
+        }
+
+        albumViewModel.saveAlbumResult.observe(viewLifecycleOwner) { result ->
+            btnHeart.isEnabled = true
+
+            result?.onSuccess { saved ->
+                val msg = if (saved) "Added to library" else "Removed from library"
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                // Quan trọng: ViewModel sẽ tự gọi lại getSavedAlbums() để cập nhật UI ở mục số 2
+            }?.onFailure {
+                Toast.makeText(context, "Action failed: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        albumViewModel.deleteAlbumResult.observe(viewLifecycleOwner) { result ->
             if (result == null) return@observe
-
             binding.progressBar.visibility = View.GONE
-
             result.onSuccess {
-                Toast.makeText(context, "Success to delete album", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
                 albumViewModel.resetStatus()
-
                 requireActivity().onBackPressedDispatcher.onBackPressed()
-
             }.onFailure {
-                Toast.makeText(context, "Error to delete album: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Delete failed: ${it.message}", Toast.LENGTH_SHORT).show()
                 albumViewModel.resetStatus()
             }
         }
+
         albumViewModel.updateAlbumResult.observe(viewLifecycleOwner) { result ->
             if (result == null) return@observe
             binding.progressBar.visibility = View.GONE
             result.onSuccess {
-                Toast.makeText(context, "Success to update album!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Updated successfully", Toast.LENGTH_SHORT).show()
                 albumViewModel.resetStatus()
-                albumId?.let { id ->
-                    albumViewModel.getAlbumById(id)
-                }
+                albumId?.let { albumViewModel.getAlbumById(it) }
             }.onFailure {
-                Toast.makeText(context, "Failed to update album: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Update failed: ${it.message}", Toast.LENGTH_SHORT).show()
                 albumViewModel.resetStatus()
             }
+        }
+    }
+    private fun checkOwnerAndSetupHeart(album: AlbumMetadata) {
+        val context = context ?: return
+
+        val currentUserId = SessionManager.getUserId(context)
+        val creatorIdStr = getCreatorIdAsString(album.creatorId)
+        if (currentUserId != null && currentUserId == creatorIdStr) {
+            btnHeart.visibility = View.GONE
+        } else {
+            btnHeart.visibility = View.VISIBLE
+            albumViewModel.getSavedAlbums()
+        }
+    }
+
+    private fun getCreatorIdAsString(creatorId: Any?): String? {
+        return when (creatorId) {
+            is String -> creatorId
+            is Map<*, *> -> creatorId["_id"] as? String
+            // is CreatorId -> creatorId.id
+            else -> null
         }
     }
 
@@ -122,10 +188,22 @@ class PlaylistReviewFragment : Fragment() {
             showAlbumOptions(it, album)
         }
     }
+    private fun updateHeartUI() {
+        if (isAlbumSaved) {
+            // Đã lưu: Màu Xanh
+            btnHeart.setColorFilter(android.graphics.Color.parseColor("#1DB954"))
+            btnHeart.setImageResource(R.drawable.ic_heart) // Hoặc ic_heart_filled
+        } else {
+            // Chưa lưu: Màu Trắng/Xám
+            btnHeart.setColorFilter(android.graphics.Color.parseColor("#B3B3B3"))
+            btnHeart.setImageResource(R.drawable.ic_heart)
+        }
+    }
     private fun renderSongsList(songs: List<SongMetadata>) {
         val adapter = ItemPlaylistSongAdapter(
             songs = songs,
             onClick = { song ->
+                SongRepository.getInstance().setPlaylist(songs,song._id)
                 context?.let { ctx ->
                     startActivity(SongViewActivity.createIntent(ctx, song))
                 }

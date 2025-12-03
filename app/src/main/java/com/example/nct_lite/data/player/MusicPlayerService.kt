@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Build
@@ -16,9 +15,14 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.nct_lite.R
 import com.example.nct_lite.ui.activity.MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlin.math.log
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class MusicPlayerService : Service() {
 
@@ -27,7 +31,9 @@ class MusicPlayerService : Service() {
         val title: String = "",
         val artist: String = "",
         val coverUrl: String = "",
-        val url: String = ""
+        val url: String = "",
+        val duration: Int = 0,
+        val currentPosition: Int = 0
     )
 
     private val channelId = "player_channel"
@@ -36,28 +42,20 @@ class MusicPlayerService : Service() {
     private val _state = MutableStateFlow(PlayerState())
     val state: StateFlow<PlayerState> get() = _state
 
-    // private val mediaPlayer: MediaPlayer by lazy {
-    //     MediaPlayer().apply {
-    //         setAudioAttributes(
-    //             AudioAttributes.Builder()
-    //                 .setUsage(AudioAttributes.USAGE_MEDIA)
-    //                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-    //                 .build()
-    //         )
-    //         setOnCompletionListener {
-    //             updateState(_state.value.copy(isPlaying = false))
-    //         }
-    //     }
-    // }
     private val mediaPlayer: MediaPlayer by lazy {
-    MediaPlayer().apply {
-        setOnCompletionListener {
-            _state.value = _state.value.copy(isPlaying = false)
+        MediaPlayer().apply {
+            setOnCompletionListener {
+                _state.value = _state.value.copy(isPlaying = false, currentPosition = 0)
+                stopProgressUpdates()
+                val intent = Intent("ACTION_SONG_COMPLETED")
+                sendBroadcast(intent)
+            }
         }
     }
-}
 
     private val binder = MusicBinder()
+    private val serviceScope = CoroutineScope(Dispatchers.Main)
+    private var progressJob: Job? = null
 
     inner class MusicBinder : Binder() {
         fun getService(): MusicPlayerService = this@MusicPlayerService
@@ -84,40 +82,62 @@ class MusicPlayerService : Service() {
         return START_STICKY
     }
 
-fun play(url: String, title: String, artist: String, cover: String) {
-    try {
-        mediaPlayer.reset()
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
+    fun play(url: String, title: String, artist: String, cover: String) {
+        try {
+            mediaPlayer.reset()
+            mediaPlayer.setDataSource(url)
+            mediaPlayer.prepareAsync()
 
-        mediaPlayer.setOnPreparedListener {
-            it.start()
-            _state.value = PlayerState(
-                isPlaying = true,
-                title = title,
-                artist = artist,
-                coverUrl = cover,
-                url = url
-            )
-        }
-        print("")
-        Log.e("PLAYER", "play() called with url = $url")
-
-    } catch (e: Exception) {
-        e.printStackTrace()
+            mediaPlayer.setOnPreparedListener { mp ->
+                mp.start()
+                _state.value = PlayerState(
+                    isPlaying = true,
+                    title = title,
+                    artist = artist,
+                    coverUrl = cover,
+                    url = url,
+                    duration = mp.duration,
+                    currentPosition = 0
+                )
+                startProgressUpdates()
+            }
+            Log.e("PLAYER", "play() called with url = $url")
+        } catch (e: Exception) {
             Log.e("PLAYER", "Exception in play()", e)
-
+        }
     }
-}
 
     fun pauseOrResume() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
             updateState(_state.value.copy(isPlaying = false))
+            stopProgressUpdates()
         } else {
             mediaPlayer.start()
             updateState(_state.value.copy(isPlaying = true))
+            startProgressUpdates()
         }
+    }
+
+    fun seekTo(position: Int) {
+        mediaPlayer.seekTo(position)
+        // Immediately update the state to reflect the seek
+        _state.value = _state.value.copy(currentPosition = mediaPlayer.currentPosition)
+    }
+
+    private fun startProgressUpdates() {
+        stopProgressUpdates() // Ensure only one job is running
+        progressJob = serviceScope.launch {
+            while (isActive && mediaPlayer.isPlaying) {
+                _state.value = _state.value.copy(currentPosition = mediaPlayer.currentPosition)
+                delay(100) // Update every second
+            }
+        }
+    }
+
+    private fun stopProgressUpdates() {
+        progressJob?.cancel()
+        progressJob = null
     }
 
     private fun updateState(state: PlayerState) {
@@ -161,7 +181,6 @@ fun play(url: String, title: String, artist: String, cover: String) {
     private fun updateNotification(state: PlayerState) {
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = buildNotification(state)
-//        manager.notify(notificationId, notification)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && state.isPlaying) {
             startForeground(notificationId, notification)
         }
@@ -170,5 +189,6 @@ fun play(url: String, title: String, artist: String, cover: String) {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
+        stopProgressUpdates()
     }
 }

@@ -1,11 +1,15 @@
 package com.example.nct_lite.ui.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -39,7 +43,7 @@ open class MainActivity : AppCompatActivity() {
 
     private val playerVM: PlayerViewModel by viewModels()
     private var userRole: String? = null
-
+    private lateinit var progressBarMusic: ProgressBar
     private lateinit var ivCover: ImageView
     private lateinit var tvTitle: TextView
     private lateinit var tvArtist: TextView
@@ -66,6 +70,7 @@ open class MainActivity : AppCompatActivity() {
         tvTitle = musicBar.findViewById<TextView>(R.id.tvTitle)
         btnPause = musicBar.findViewById<ImageButton>(R.id.btnPause)
         tvArtist = musicBar.findViewById(R.id.tvArtist)
+        progressBarMusic = musicBar.findViewById(R.id.progressBarMusic)
 
         musicBar.setOnClickListener {
             val state = playerVM.playerState.value
@@ -112,6 +117,13 @@ open class MainActivity : AppCompatActivity() {
                             .into(ivCover)
                     } else {
                         ivCover.setImageResource(R.drawable.ic_avatar_foreground)
+                    }
+                    if (state.duration > 0) {
+                        progressBarMusic.max = state.duration
+
+                        // Để thanh chạy mượt hơn trên các bản Android mới, có thể dùng setProgress(value, animate)
+                        // Nhưng setProgress(value) là đủ dùng
+                        progressBarMusic.progress = state.currentPosition
                     }
                 }
             }
@@ -221,5 +233,33 @@ open class MainActivity : AppCompatActivity() {
 
     fun showNewPlaylistSheet() {
         NewPlaylistBottomSheetFragment().show(supportFragmentManager, "NewPlaylistSheet")
+    }
+    // Đăng ký BroadcastReceiver trong MainActivity
+    private val songCompletionReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "ACTION_SONG_COMPLETED") {
+                playerVM.skipNext() // Tự động Next bài
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val filter = IntentFilter("ACTION_SONG_COMPLETED")
+        // Lưu ý: Với Android 12+, nên thêm flag RECEIVER_NOT_EXPORTED
+//        registerReceiver(songCompletionReceiver, filter, RECEIVER_NOT_EXPORTED)
+        // KIỂM TRA PHIÊN BẢN ANDROID ĐỂ GẮN CỜ PHÙ HỢP
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            // Android 13 (API 33) trở lên: Bắt buộc phải có cờ này
+            registerReceiver(songCompletionReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            // Android 12 trở xuống: Không cần cờ (hoặc dùng hàm cũ)
+//            registerReceiver(songCompletionReceiver, filter,RECEIVER_EXPORTED)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(songCompletionReceiver)
     }
 }

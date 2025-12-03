@@ -11,6 +11,8 @@ import com.example.nct_lite.data.album.response.AlbumListResponse
 import com.example.nct_lite.data.album.response.AlbumResponse
 import com.example.nct_lite.data.album.response.AlbumSongsResponse
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class AlbumViewModel(
     private val repo: AlbumRepository = AlbumRepository()
@@ -26,20 +28,55 @@ class AlbumViewModel(
 
     val _resetAddSongResult = MutableLiveData< Result<Unit>?>()
     val resetAddSongResult: LiveData<Result<Unit>?> = _resetAddSongResult
-
     val albums = MutableLiveData<Result<AlbumListResponse>>()
     val albumDetail = MutableLiveData<Result<AlbumSongsResponse>>()
     val createAlbumResult = MutableLiveData<Result<AlbumResponse>?>()
     private val _myAlbums = MutableLiveData<Result<AlbumListResponse>>()
     val myAlbums: LiveData<Result<AlbumListResponse>> = _myAlbums
-
+    private val _publicAlbums = MutableLiveData<Result<AlbumListResponse>>()
+    val publicAlbums: LiveData<Result<AlbumListResponse>> = _publicAlbums
     private val _savedAlbums = MutableLiveData<Result<AlbumListResponse>>()
     val savedAlbums: LiveData<Result<AlbumListResponse>> = _savedAlbums
+    private val _saveAlbumResult = MutableLiveData<Result<Boolean>?>()
+    val saveAlbumResult: LiveData<Result<Boolean>?> = _saveAlbumResult
+
+    fun save(albumId: String) {
+        viewModelScope.launch {
+            try {
+                val result = repo.saveAlbum(albumId)
+                if (result.isSuccess) {
+                    _saveAlbumResult.postValue(Result.success(true)) // true = saved
+                } else {
+                    _saveAlbumResult.postValue(Result.failure(result.exceptionOrNull() ?: Exception("Save failed")))
+                }
+            } catch (e: Exception) {
+                _saveAlbumResult.postValue(Result.failure(e))
+            }
+        }
+    }
     fun createAlbum(
-        albumCreateRequest: AlbumCreateRequest
+        title: RequestBody,
+        description: RequestBody?,
+        isPublic: RequestBody?,
+        cover: MultipartBody.Part?
     ) {
         viewModelScope.launch {
-            createAlbumResult.postValue(repo.createAlbum( albumCreateRequest))
+            createAlbumResult.postValue(repo.createAlbum( title, description, isPublic, cover))
+        }
+    }
+    fun unsave(albumId: String) {
+        viewModelScope.launch {
+            try {
+                val result = repo.unsaveAlbum(albumId)
+                if (result.isSuccess) {
+                    _saveAlbumResult.postValue(Result.success(false))
+                    getSavedAlbums()
+                } else {
+                    _saveAlbumResult.postValue(Result.failure(result.exceptionOrNull() ?: Exception("Unsave failed")))
+                }
+            } catch (e: Exception) {
+                _saveAlbumResult.postValue(Result.failure(e))
+            }
         }
     }
     fun updateAlbum(
@@ -78,15 +115,19 @@ class AlbumViewModel(
             _myAlbums.postValue(repo.getMyOwnAlbum())
         }
     }
-    fun getSavedAlbum(){
+    fun getSavedAlbums() {
         viewModelScope.launch {
-            _savedAlbums.postValue(repo.getSavedAlbums())
-        }
-    }
+            try {
+                val response = repo.getSavedAlbums()
+                _savedAlbums.postValue(response)
+            } catch (e: Exception) {
+                _savedAlbums.postValue(Result.failure(e))
+            }
+        }}
 
     fun getAllAlbums() {
         viewModelScope.launch {
-            albums.postValue(repo.getAlbums())
+            _publicAlbums.postValue(repo.getAlbums())
         }
     }
 
@@ -113,4 +154,8 @@ class AlbumViewModel(
         _removeSongResult.value = null
         _updateAlbumResult.value = null
     }
+    fun resetAddSongResult(){
+        _addSongResult.value = null
+    }
 }
+
